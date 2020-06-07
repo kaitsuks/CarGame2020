@@ -50,6 +50,7 @@ namespace KaitsuCar {
 
         void Update()
         {
+            speed = KKSGameControl.instance.scrollSpeed;
             //Don't allow control if the car is destroyed.
             if (isDead == false)
             {
@@ -102,7 +103,7 @@ namespace KaitsuCar {
             //...tell the Animator about it...
             // anim.SetTrigger("Die"); // TODO
             //...and tell the game control about it.
-            GameControl.instance.CarDestroyed();
+            KKSGameControl.instance.CarDestroyed();
         }
     }
 

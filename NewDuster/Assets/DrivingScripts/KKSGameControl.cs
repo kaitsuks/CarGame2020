@@ -3,14 +3,15 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-//namespace Flappy
-//{
-    public class GameControl : MonoBehaviour
+namespace KaitsuCar
+{
+    public class KKSGameControl : MonoBehaviour
     {
-        public static GameControl instance;            //A reference to our game control script so we can access it statically.
+        public static KKSGameControl instance;            //A reference to our game control script so we can access it statically.
         public Text scoreText;                        //A reference to the UI text component that displays the player's score.
         public GameObject gameOvertext;                //A reference to the object that displays the text which appears when the player dies.
-
+        public GameObject car;
+        private Rigidbody2D carRB;
         private int score = 0;                        //The player's score.
         public bool gameOver = false;                //Is the game over?
         public float scrollSpeed = -1.5f;
@@ -26,6 +27,7 @@ using UnityEngine.SceneManagement;
             else if (instance != this)
                 //...destroy this one because it is a duplicate.
                 Destroy(gameObject);
+            carRB = car.GetComponent<Rigidbody2D>();
         }
 
         void Update()
@@ -38,7 +40,7 @@ using UnityEngine.SceneManagement;
             }
         }
 
-        public void CarScored()
+        public void BirdScored()
         {
             //The bird can't score if the game is over.
             if (gameOver)
@@ -55,7 +57,9 @@ using UnityEngine.SceneManagement;
             gameOvertext.SetActive(true);
             //Set the game to be over.
             gameOver = true;
+            carRB.velocity = Vector2.zero;
+            scrollSpeed = 0f;
         }
     }
 
-//}
+}

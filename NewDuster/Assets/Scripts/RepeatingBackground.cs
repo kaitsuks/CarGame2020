@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Flappy
+namespace KaitsuCar
 {
     public class RepeatingBackground : MonoBehaviour
     {

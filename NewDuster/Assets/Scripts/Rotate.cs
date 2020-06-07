@@ -10,8 +10,9 @@ public class Rotate : Physics2DObject
 
 	[Header("Rotation")]
 	public float speed = 5f;
-	
-	private float spin;
+    public float speedFactor = 5f;
+
+    private float spin;
 
     //public GameObject etuala;
     //float speedCar;
@@ -39,6 +40,7 @@ public class Rotate : Physics2DObject
 		{
 			spin = Input.GetAxis("Horizontal2");
 		}
+        speed = -KaitsuCar.KKSGameControl.instance.scrollSpeed * speedFactor;
 	}
 	
 
