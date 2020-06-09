@@ -24,6 +24,12 @@ namespace KaitsuCar
             {
                 rb2d.velocity = Vector2.zero;
             }
+
+            if(transform.position.y > 5) //{ transform.position.y = 5; }
+            {
+                transform.position = new Vector3(transform.position.x, 5f);
+            }
+
         }
     }
 

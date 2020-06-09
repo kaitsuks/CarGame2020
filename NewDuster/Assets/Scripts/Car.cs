@@ -99,11 +99,11 @@ namespace KaitsuCar {
             // Zero out the bird's velocity
             rb2d.velocity = Vector2.zero;
             // If the bird collides with something set it to dead...
-            isDead = true;
+            //isDead = true;
             //...tell the Animator about it...
             // anim.SetTrigger("Die"); // TODO
             //...and tell the game control about it.
-            KKSGameControl.instance.CarDestroyed();
+            //KKSGameControl.instance.CarDestroyed();
         }
     }
 

@@ -40,7 +40,7 @@ namespace KaitsuCar
         {
             timeSinceLastSpawned += Time.deltaTime;
 
-            if (GameControl.instance.gameOver == false && timeSinceLastSpawned >= spawnRate)
+            if (KKSGameControl.instance.gameOver == false && timeSinceLastSpawned >= spawnRate)
             {
                 timeSinceLastSpawned = 0f;
 
