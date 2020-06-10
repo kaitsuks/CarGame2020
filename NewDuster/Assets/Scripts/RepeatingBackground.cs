@@ -40,7 +40,7 @@ namespace KaitsuCar
             if (transform.position.x < -groundHorizontalLength * 1f)
             //if (transform.position.x < 0.0f)
             {
-                Debug.Log("NYT TAPAHTUU X = " + transform.position.x + " ExtraOffset " + extraOffset);
+               // Debug.Log("NYT TAPAHTUU X = " + transform.position.x + " ExtraOffset " + extraOffset);
                 //If true, this means this object is no longer visible and we can safely move it forward to be re-used.
                 RepositionBackground();
             }

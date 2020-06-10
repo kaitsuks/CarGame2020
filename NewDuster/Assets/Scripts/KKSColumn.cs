@@ -8,13 +8,14 @@ namespace KaitsuCar {
         public bool bRoof = false;
         public bool bDiamond = false;
         public bool bHappenOnlyOnce = true;
-        private bool bCollided = false;
+        [HideInInspector]
+        public bool bCollided = false;
         private BoxCollider2D boxCollider2D;
         private CapsuleCollider2D capsuleCollider2D;
         private Rigidbody2D rb2D;
         void OnTriggerEnter2D(Collider2D other)
         {
-            if ((other.GetComponent<Car>() != null) && !bDiamond)
+            if ((other.GetComponent<Car>() != null) && !bDiamond && !bCollided)
             {
                 //If the bird hits the trigger collider in between the columns then
                 //tell the game control that the bird scored.
@@ -24,13 +25,14 @@ namespace KaitsuCar {
                 Invoke("MakeDead", 1f);
                 
             }
-            else
-            {
-                if (!bCollided && bDiamond)
+            //else // "VAARALLINEN"
+            //{
+                if ((other.GetComponent<Car>() != null) && !bCollided && bDiamond)
                 {
                     KKSGameControl.instance.AddDiamonds(); //LISÄTÄÄN SCOREA
+                    bCollided = true;
                 }
-            }
+            //}
 
             if (other.GetComponent<EdgeCollider2D>() != null && bRoof)
             {
@@ -39,7 +41,7 @@ namespace KaitsuCar {
                 //GameControl.instance.CarDestroyed();
                 KKSGameControl.instance.CarDestroyed();
             }
-            bCollided = true;
+            
         }
 
         public void MakeDead()

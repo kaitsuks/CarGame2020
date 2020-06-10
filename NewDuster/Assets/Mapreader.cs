@@ -44,7 +44,13 @@ public class Mapreader : MonoBehaviour
     private SpriteRenderer[,] renderers;
     public GameObject tolppaPrefab;
     public GameObject tolppa2Prefab;
+    public GameObject flagBluePrefab;
+    public GameObject flowerPrefab;
+    public GameObject ruohoPrefab;
+    //public GameObject tolppa3Prefab;
     public TileBase redSign;
+    public TileBase flagBlue;
+    public TileBase flower;
 
     private Vector2 objectPoolPosition;
 
@@ -166,7 +172,7 @@ public class Mapreader : MonoBehaviour
                 local[j, i, 1] = 0;
                 local[j, i, 2] = 0;
                 //luodaan targetit taulukkoon
-                targets[i, j] = (GameObject)Instantiate(tolppaPrefab, new Vector2(objectPoolPosition.x + i, objectPoolPosition.y + j), Quaternion.identity);
+                targets[i, j] = (GameObject)Instantiate(ruohoPrefab, new Vector2(objectPoolPosition.x + i, objectPoolPosition.y + j), Quaternion.identity);
                 renderers[i, j] = targets[i, j].GetComponent<SpriteRenderer>();
             }
         }
@@ -199,17 +205,28 @@ public class Mapreader : MonoBehaviour
             {
                 //TARKISTETAAN RUUTU
                 checkPos = new Vector3Int(gridPos.x + j, gridPos.y + i, 0);
+                //checkPos = new Vector3Int(gridPos.x + i, gridPos.y + j, 0); //TEST
                 if (m_Collider.GetTile(checkPos) != null)
                 {
                     //Debug.Log("TOLPPA LÖYDETTY" + checkPos);
                     local[j, i, 0] = 1;
                 }
 
-                if (m_Foreground.GetTile(checkPos)  == redSign)
-                {
+                //if (m_Foreground.GetTile(checkPos)  == redSign)
+                    if (m_Road.GetTile(checkPos) == redSign)
+                    {
                     //Debug.Log("PUNAINEN TOLPPA LÖYDETTY" + checkPos);
                     local[j, i, 0] = 2;
+                    }
+                if (m_Road.GetTile(checkPos) == flagBlue)
+                {
+                    local[j, i, 0] = 3;
                 }
+                if (m_Road.GetTile(checkPos) == flower)
+                {
+                    local[j, i, 0] = 4;
+                }
+
 
                 ////trigo[j, i, 0] = Mathf.Atan2(j, i);
                 //aAngle = Mathf.Atan2(j, i);
@@ -226,69 +243,38 @@ public class Mapreader : MonoBehaviour
             //
             for (int i = 0; i < arraySize; i++)
             {
+                //Debug.Log("Ruutu " + i * j);
+               
+                    
                 //TARKISTETAAN RUUTU
-                if (local[j, i, 0] == 1 || local[j, i, 0] == 2)
+                //if (local[j, i, 0] == 1 || local[j, i, 0] == 2 )
                 {
+                    if (local[j, i, 0] == 1)
+                    {
+                        targets[i, j] = tolppaPrefab;
+                        DrawObject(i, j);
+                       // Debug.Log("PIIRRETTY TOLPPA " + i * j);
+                    }
                     if (local[j, i, 0] == 2)
                     {
                         targets[i, j] = tolppa2Prefab;
+                        DrawObject(i, j);
+                        Debug.Log("PIIRRETTY KAKTUS " + i * j);
                     }
-                    //Debug.Log("PIIRRETÄÄN TOLPPA " + j + " " +  i);
-                    //KULMA
-                    //aAngle = trigo[j, i, 0] + euler;
-                    //aAngle = (trigo[j, i, 0] + euler)/360; //TEST
-                    //aAngle = euler - trigo[j, i, 0]; //TEST WIRHE
-                    aAngle = 2 * Mathf.PI - trigo[j, i, 0];
-                    //aAngle =  trigo[j, i, 0];
-                    //Debug.Log(" ANGLE ON TOLPPAAN " + aAngle);
-                    aAngleDeg = Mathf.Rad2Deg * aAngle;
-                    //Debug.Log(" ANGLE ASTEINA TOLPPAAN " + aAngleDeg);
-                    //ETÄISYYS
-                    dist = trigo[j, i, 1];
-                    if (float.IsNaN(dist)) dist = 3; //TESTI
-                        //Debug.Log(" ETÄISYYS TOLPPAAN " + dist);
-                    euler = 360f - euler; //TEST, EULER MENEE 360 ASTETTA VASTAPÄIVÄÄN
-                    //aAngleDeg = aAngleDeg + euler; //TEST
-                    //Debug.Log(" DISTANSSI ON TOLPPAAN " + dist);
-                    //newSize = targets[i, j].transform.localScale.y;
-                    newSize2 = 0f;
-                    //Debug.Log(" ORIGINAALI SKAALA ON " + newSize);
-                    //newSize = rightM1.transform.localScale.y * dist;
-                    //newSize = 1f;
-                    newSize2 = targets[i, j].transform.localScale.y;
-                    //newSize2 = newSize2 * (dist) /100f; //sizeFactor
-                    newSize2 = newSize2 / (dist);  // / 10f; //sizeFactor
-                    if (newSize2 > 5f) newSize2 = 5f; //rajoitin
-                    if (newSize2 < 0.1f) newSize2 = 0.1f; //rajoitin
-                    //Debug.Log(" UUSITTU Y SKAALA ON " + newSize2);
-                    //sizeX = rightM1.transform.localScale.x;
-                    sizeX = targets[i, j].transform.localScale.x;
-                    //Debug.Log(" X SKAALA ON " + sizeX);
-                    //scaleVector = new Vector3(sizeX, newSize2, 1f);
-                    //if (!float.IsNaN(transform.position.x) && !float.IsNaN(transform.position.y) && !float.IsNaN(transform.position.z))
-                    //{
-                    //    //Do stuff
-                    //}
-
-                    if (!float.IsNaN(newSize2))
+                    if (local[j, i, 0] == 3)
                     {
-            scaleVector = new Vector3(1f, newSize2, 1f);
-            //rightM1.transform.localScale = scaleVector;
-            //rightM1.transform.position = new Vector3(- (aAngle/30 -15), spriteY - 10, 0f);
-                        targets[i, j].transform.localScale = scaleVector;
-                        //targets[i, j].transform.position = new Vector3(spriteX + aAngle * xSkaalain - 3, spriteY - 3f, 0f);
-                        //if (euler - aAngle < 45f)
-                        {
-                            //targets[i, j].transform.position = new Vector3(spriteX + aAngle * 120 - 130 + euler / 10, spriteY +1f +dist/100, 0f);
-                            //targets[i, j].transform.position = new Vector3(spriteX - aAngleDeg + euler, spriteY + dist / 10, 0f);
-                            targets[i, j].transform.position = new Vector3(spriteX - aAngleDeg/24 + euler/24, spriteY + dist / 10, 0f);
-                            renderers[i, j].color = new Color(newSize2, dist, 0.6f);
-                            renderers[i, j].sortingOrder = (int)newSize2 * 10; //HUOM ei välilyöntiä (int)newSize2
-                            landscape.transform.position = new Vector2(euler, spriteY + 3);
-                            landscape2.transform.position = new Vector2(euler + landscapeLenght, spriteY + 3);
-                            
-                        }
+                        targets[i, j] = flagBluePrefab;
+                        DrawObject(i, j);
+                        Debug.Log("PIIRRETTY SININEN LIPPU " + i * j);
                     }
+                    if (local[j, i, 0] == 4)
+                    {
+                        targets[i, j] = flowerPrefab;
+                        DrawObject(i, j);
+                        Debug.Log("PIIRRETTY sininen KUKKA " + i * j);
+                    }
+
+                   
 
                 }
 
@@ -301,8 +287,10 @@ public class Mapreader : MonoBehaviour
         {
             for (int i = 0; i < arraySize; i++)
             {
-                //TYJENNETÄÄN RUUTU
+                //TYHJENNETÄÄN RUUTU
                 local[j, i, 0] = 0;
+                //tyhjennetään prefabit
+                targets[i, j] = ruohoPrefab;
             }
         }
         //Debug.Log("TAULUKKO TYHJENNETTY");
@@ -368,5 +356,66 @@ public class Mapreader : MonoBehaviour
         //Debug.Log(" EULER " + euler);
         //Debug.Log(" ROTATION " + myCar.transform.rotation);
         yield return new WaitForSeconds(0.5f);
+    }
+
+    void DrawObject(int i, int j)
+    {
+        //Debug.Log("PIIRRETÄÄN TOLPPA " + j *  i);
+        //KULMA
+        //aAngle = trigo[j, i, 0] + euler;
+        //aAngle = (trigo[j, i, 0] + euler)/360; //TEST
+        //aAngle = euler - trigo[j, i, 0]; //TEST WIRHE
+        aAngle = 2 * Mathf.PI - trigo[j, i, 0];
+        //aAngle =  trigo[j, i, 0];
+        //Debug.Log(" ANGLE ON TOLPPAAN " + aAngle);
+        aAngleDeg = Mathf.Rad2Deg * aAngle;
+        //Debug.Log(" ANGLE ASTEINA TOLPPAAN " + aAngleDeg);
+        //ETÄISYYS
+        dist = trigo[j, i, 1];
+        if (float.IsNaN(dist)) dist = 0.1f; //TESTI
+        //Debug.Log(" ETÄISYYS TOLPPAAN " + dist);
+        //euler = 360f - euler; //TEST, EULER MENEE 360 ASTETTA VASTAPÄIVÄÄN
+        //aAngleDeg = aAngleDeg + euler; //TEST
+        //Debug.Log(" DISTANSSI ON TOLPPAAN " + dist);
+        //newSize = targets[i, j].transform.localScale.y;
+        //dist = 0.1f; //TEST
+        //newSize2 = 1f;
+        //Debug.Log(" ORIGINAALI SKAALA ON " + newSize);
+        //newSize = rightM1.transform.localScale.y * dist;
+        //newSize = 1f;
+        newSize2 = targets[i, j].transform.localScale.y;
+        //newSize2 = newSize2 * (dist) /100f; //sizeFactor
+        newSize2 = newSize2 / (dist);  // / 10f; //sizeFactor //TEST
+        if (newSize2 > 5f) newSize2 = 5f; //rajoitin
+        if (newSize2 < 0.1f) newSize2 = 0.1f; //rajoitin
+                                              //Debug.Log(" UUSITTU Y SKAALA ON " + newSize2);
+                                              //sizeX = rightM1.transform.localScale.x;
+        sizeX = targets[i, j].transform.localScale.x;
+        //Debug.Log(" X SKAALA ON " + sizeX);
+        //scaleVector = new Vector3(sizeX, newSize2, 1f);
+        //if (!float.IsNaN(transform.position.x) && !float.IsNaN(transform.position.y) && !float.IsNaN(transform.position.z))
+        //{
+        //    //Do stuff
+        //}
+        if (!float.IsNaN(newSize2))
+        {
+            scaleVector = new Vector3(1f, newSize2, 1f);
+            //rightM1.transform.localScale = scaleVector;
+            //rightM1.transform.position = new Vector3(- (aAngle/30 -15), spriteY - 10, 0f);
+            targets[i, j].transform.localScale = scaleVector;
+            //targets[i, j].transform.position = new Vector3(spriteX + aAngle * xSkaalain - 3, spriteY - 3f, 0f);
+            //if (euler - aAngle < 45f)
+            {
+                //targets[i, j].transform.position = new Vector3(spriteX + aAngle * 120 - 130 + euler / 10, spriteY +1f +dist/100, 0f);
+                //targets[i, j].transform.position = new Vector3(spriteX - aAngleDeg /24 + euler / 24, spriteY + dist / 10, 0f);
+                targets[i, j].transform.position = new Vector3(spriteX -10 + (aAngleDeg - euler), spriteY, 0f);
+                renderers[i, j].color = new Color(newSize2, dist, 0.6f);
+                renderers[i, j].sortingOrder = (int)newSize2 * 10; //HUOM ei välilyöntiä (int)newSize2
+                landscape.transform.position = new Vector2(euler, spriteY + 3);
+                landscape2.transform.position = new Vector2(euler + landscapeLenght, spriteY + 3);
+
+            }
+        }
+        return;
     }
 }
