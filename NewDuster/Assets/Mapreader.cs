@@ -52,7 +52,11 @@ public class Mapreader : MonoBehaviour
     public TileBase flagBlue;
     public TileBase flower;
 
-    public GameObject testSprite;
+    public Sprite testSprite;
+    public Sprite flagBlueSprite;
+    public Sprite flagRedSprite;
+    public Sprite cactus2Sprite;
+    public Sprite tree1Sprite;
 
     private Vector2 objectPoolPosition;
 
@@ -264,9 +268,16 @@ public class Mapreader : MonoBehaviour
                     dist = Vector3.Distance(gridPos,  checkPos);
                     // Debug.Log("gridPos,  checkPos, dist " + gridPos + "  " + checkPos + "  " + dist);
 
+                    //testSprite;
+                    //flagBlueSprite
+                    //flagRedSprite;
+                    //cactus2Sprite;
+                    //tree1Sprite;
+
                     if (local[j, i, 0] == 0)
                     {
-                        targets[i, j] = ruohoPrefab;
+                        //targets[i, j] = ruohoPrefab;
+                        renderers[i, j].sprite = testSprite;
                         //targets[i, j] = (GameObject)Instantiate(ruohoPrefab, new Vector2(objectPoolPosition.x + i, objectPoolPosition.y + j), Quaternion.identity);
                         //targets[i, j] = ruohoPrefab;
                         //DrawObject(i, j);
@@ -277,42 +288,45 @@ public class Mapreader : MonoBehaviour
                     if (local[j, i, 0] == 1)
                     {
                         targets[i, j] = flagBluePrefab;
-                        //renderers[i, j].sprite = tSprite;
+                        renderers[i, j].sprite = flagBlueSprite;
                         //DrawObject(i, j);
                         //StartCoroutine(DrawObject(i, j));
                         //Debug.Log("PIIRRETTY TOLPPA " + i * j);
                     }
-                    else
-                        targets[i, j] = ruohoPrefab;
+                    //else
+                    //    targets[i, j] = ruohoPrefab;
 
                     if (local[j, i, 0] == 2)
                     {
                         targets[i, j] = tolppa2Prefab;
+                        renderers[i, j].sprite = flagRedSprite;
                         //DrawObject(i, j);
                         //StartCoroutine(DrawObject(i, j));
                         //  Debug.Log("PIIRRETTY punainen tolppa " + i * j);
                     }
-                    else
-                        targets[i, j] = ruohoPrefab;
+                    //else
+                    //    targets[i, j] = ruohoPrefab;
 
                     if (local[j, i, 0] == 3)
                     {
                         targets[i, j] = flagBluePrefab;
+                        renderers[i, j].sprite = cactus2Sprite;
                         //DrawObject(i, j);
                         //StartCoroutine(DrawObject(i, j));
                         //  Debug.Log("PIIRRETTY SININEN LIPPU " + i * j);
                     }
-                    else
-                        targets[i, j] = ruohoPrefab;
+                    //else
+                    //    targets[i, j] = ruohoPrefab;
 
                     if (local[j, i, 0] == 4)
                     {
                         targets[i, j] = flowerPrefab;
+                        renderers[i, j].sprite = tree1Sprite;
                         //StartCoroutine(DrawObject(i, j));
                         //Debug.Log("PIIRRETTY sininen KUKKA " + i * j);
                     }
-                    else
-                        targets[i, j] = ruohoPrefab;
+                    //else
+                    //    targets[i, j] = ruohoPrefab;
 
 
                     aAngle = 2 * Mathf.PI - trigo[j, i, 0];
@@ -325,10 +339,10 @@ public class Mapreader : MonoBehaviour
                 if (newSize2 < 0.1f) newSize2 = 0.1f; //rajoitin
                 scaleVector = new Vector3(1f, newSize2, 1f);
                 //targets[i, j].transform.position = new Vector3(spriteX + aAngle * 120 - 130 + euler / 10, spriteY +1f +dist/100, 0f);
-                targets[i, j].transform.position = new Vector3(spriteX - aAngleDeg /24 + euler / 24, spriteY + dist / 10, 0f);
+              //  targets[i, j].transform.position = new Vector3(spriteX - aAngleDeg /24 + euler / 24, spriteY + dist / 10, 0f);
               //  testSprite.transform.position = new Vector3(spriteX - aAngleDeg / 24 + euler / 24, spriteY + dist / 10, 0f);
 
-                    //targets[i, j].transform.position = new Vector3(spriteX -10 - (aAngleDeg - euler), spriteY, 0f);
+                    targets[i, j].transform.position = new Vector3(spriteX  +270 - (aAngleDeg - euler), spriteY, 0f);
                     //targets[i, j].transform.position = new Vector3(spriteX - 10, spriteY, 0f);
                     //targets[i, j].transform.position = new Vector3(spriteX - 2, spriteY, 0f); //TEST
                     //flowerPrefab.transform.position = new Vector3(spriteX - 1, spriteY + 1, 0f); //TEST
@@ -353,7 +367,7 @@ public class Mapreader : MonoBehaviour
             for (int i = 0; i < arraySize; i++)
             {
                 //TYHJENNETÄÄN RUUTU
-                //local[j, i, 0] = 0; //TEST
+                local[j, i, 0] = 0; //TEST
                 //tyhjennetään prefabit
                 //targets[i, j] = ruohoPrefab; // TEST ei jaksa pyörittää
             }

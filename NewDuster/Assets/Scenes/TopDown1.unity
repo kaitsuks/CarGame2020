@@ -12133,7 +12133,11 @@ MonoBehaviour:
   redSign: {fileID: 11400000, guid: 44a82bb3eeab5474099276470bb22691, type: 2}
   flagBlue: {fileID: 11400000, guid: edb8910ec072e6c418c91a2ad84dfd5d, type: 2}
   flower: {fileID: 11400000, guid: 4f9e15d068442ad47b07430d2bce51f9, type: 2}
-  testSprite: {fileID: 116308104}
+  testSprite: {fileID: 21300000, guid: 9927c53595d9adc4e96ed7f7fcaf70b7, type: 3}
+  flagBlueSprite: {fileID: 21300000, guid: e9bbc0aacb4832a41a8acdb81520c136, type: 3}
+  flagRedSprite: {fileID: 21300000, guid: 3281568c04f61a74cb8c5eb359d5d5e8, type: 3}
+  cactus2Sprite: {fileID: 21300000, guid: 4d4386d0fd1748e49a0155b6b4448bbb, type: 3}
+  tree1Sprite: {fileID: 21300000, guid: 0dbdc0a4f108f964f895c843fda14241, type: 3}
   landscape: {fileID: 1623598828}
   landscape2: {fileID: 141045246}
   xSkaalain: 200
