@@ -47,6 +47,7 @@ public class Mapreader : MonoBehaviour
     public GameObject flagBluePrefab;
     public GameObject flowerPrefab;
     public GameObject ruohoPrefab;
+    public GameObject miniCar;
     //public GameObject tolppa3Prefab;
     public TileBase redSign;
     public TileBase flagBlue;
@@ -57,6 +58,7 @@ public class Mapreader : MonoBehaviour
     public Sprite flagRedSprite;
     public Sprite cactus2Sprite;
     public Sprite tree1Sprite;
+    public Sprite miniCarSprite;
 
     private Vector2 objectPoolPosition;
 
@@ -178,11 +180,11 @@ public class Mapreader : MonoBehaviour
                 local[j, i, 1] = 0;
                 local[j, i, 2] = 0;
                 //luodaan targetit taulukkoon
-                targets[i, j] = (GameObject)Instantiate(ruohoPrefab, new Vector2(objectPoolPosition.x + i, objectPoolPosition.y + j), Quaternion.identity);
-                
-                //targets[i, j] = ruohoPrefab;
-                targets[i, j].transform.position = new Vector2(0f + i, -50f + j);
-                renderers[i, j] = targets[i, j].GetComponent<SpriteRenderer>();
+                targets[j, i] = (GameObject)Instantiate(ruohoPrefab, new Vector2(objectPoolPosition.x + i, objectPoolPosition.y + j), Quaternion.identity);
+
+                //targets[j, i] = ruohoPrefab;
+                targets[j, i].transform.position = new Vector2(0f + j, -50f + i);
+                renderers[j, i] = targets[j, i].GetComponent<SpriteRenderer>();
             }
         }
 
@@ -199,14 +201,18 @@ public class Mapreader : MonoBehaviour
         //    Debug.Log("KOLARI AITAAN");
         //}
 
-        euler = myCar.transform.rotation.eulerAngles.z;
+        //euler = myCar.transform.rotation.eulerAngles.z;
+        euler = 360f - myCar.transform.rotation.eulerAngles.z; //TEST
         StartCoroutine(ReadMap());
     }
 
     IEnumerator ReadMap()
     {
+        int offsetX = arraySize / 2;
+        int offsetY = arraySize / 2;
         Vector3Int findPos;
-        findPos = new Vector3Int((gridPos.x) - arraySize / 2, (gridPos.y) - arraySize / 2, 0);
+        //findPos = new Vector3Int((gridPos.x) - arraySize / 2, (gridPos.y) - arraySize / 2, 0);
+        findPos = new Vector3Int((gridPos.x - offsetX), (gridPos.y - offsetY), 0);
 
         //LUETAAN KOKO RUUDUKKO
         //Debug.Log("LUETAAN RUUDUKKO PAIKASSA " + gridPos);
@@ -276,8 +282,8 @@ public class Mapreader : MonoBehaviour
 
                     if (local[j, i, 0] == 0)
                     {
-                        //targets[i, j] = ruohoPrefab;
-                        renderers[i, j].sprite = testSprite;
+                        targets[j, i] = ruohoPrefab;
+                        renderers[j, i].sprite = testSprite;
                         //targets[i, j] = (GameObject)Instantiate(ruohoPrefab, new Vector2(objectPoolPosition.x + i, objectPoolPosition.y + j), Quaternion.identity);
                         //targets[i, j] = ruohoPrefab;
                         //DrawObject(i, j);
@@ -287,8 +293,8 @@ public class Mapreader : MonoBehaviour
 
                     if (local[j, i, 0] == 1)
                     {
-                        targets[i, j] = flagBluePrefab;
-                        renderers[i, j].sprite = flagBlueSprite;
+                        targets[j, i] = flagBluePrefab;
+                        renderers[j, i].sprite = flagBlueSprite;
                         //DrawObject(i, j);
                         //StartCoroutine(DrawObject(i, j));
                         //Debug.Log("PIIRRETTY TOLPPA " + i * j);
@@ -298,7 +304,7 @@ public class Mapreader : MonoBehaviour
 
                     if (local[j, i, 0] == 2)
                     {
-                        targets[i, j] = tolppa2Prefab;
+                        targets[j, i] = tolppa2Prefab;
                         renderers[i, j].sprite = flagRedSprite;
                         //DrawObject(i, j);
                         //StartCoroutine(DrawObject(i, j));
@@ -309,8 +315,8 @@ public class Mapreader : MonoBehaviour
 
                     if (local[j, i, 0] == 3)
                     {
-                        targets[i, j] = flagBluePrefab;
-                        renderers[i, j].sprite = cactus2Sprite;
+                        targets[j, i] = flagBluePrefab;
+                        renderers[j, i].sprite = cactus2Sprite;
                         //DrawObject(i, j);
                         //StartCoroutine(DrawObject(i, j));
                         //  Debug.Log("PIIRRETTY SININEN LIPPU " + i * j);
@@ -328,9 +334,14 @@ public class Mapreader : MonoBehaviour
                     //else
                     //    targets[i, j] = ruohoPrefab;
 
+                    //targets[arraySize / 2, arraySize / 2] = miniCar;
+                    //renderers[arraySize / 2, arraySize / 2].sprite = miniCarSprite;
+
 
                     aAngle = 2 * Mathf.PI - trigo[j, i, 0];
-                aAngleDeg = Mathf.Rad2Deg * aAngle;
+                    //aAngle = trigo[j, i, 0];
+                    aAngleDeg = Mathf.Rad2Deg * aAngle - 90;
+                    //miniCar.transform.rotation = myCar.transform.rotation;
                 //euler = 360f - euler; //TEST, EULER MENEE 360 ASTETTA VASTAPÄIVÄÄN
                 //aAngleDeg = aAngleDeg + euler; //TEST
                 //newSize2 = 1f;
@@ -338,21 +349,24 @@ public class Mapreader : MonoBehaviour
                 if (newSize2 > 5f) newSize2 = 5f; //rajoitin
                 if (newSize2 < 0.1f) newSize2 = 0.1f; //rajoitin
                 scaleVector = new Vector3(1f, newSize2, 1f);
-                //targets[i, j].transform.position = new Vector3(spriteX + aAngle * 120 - 130 + euler / 10, spriteY +1f +dist/100, 0f);
-              //  targets[i, j].transform.position = new Vector3(spriteX - aAngleDeg /24 + euler / 24, spriteY + dist / 10, 0f);
-              //  testSprite.transform.position = new Vector3(spriteX - aAngleDeg / 24 + euler / 24, spriteY + dist / 10, 0f);
+                    //targets[j, i].transform.position = new Vector3(spriteX + aAngle * 120 - 130 + euler / 10, spriteY +1f +dist/100, 0f);
+                    //  targets[j, i].transform.position = new Vector3(spriteX - aAngleDeg /24 + euler / 24, spriteY + dist / 10, 0f);
+                    //  testSprite.transform.position = new Vector3(spriteX - aAngleDeg / 24 + euler / 24, spriteY + dist / 10, 0f);
 
-                    targets[i, j].transform.position = new Vector3(spriteX  +270 - (aAngleDeg - euler), spriteY, 0f);
-                    //targets[i, j].transform.position = new Vector3(spriteX - 10, spriteY, 0f);
-                    //targets[i, j].transform.position = new Vector3(spriteX - 2, spriteY, 0f); //TEST
+                    //testataan laatikkoa        targets[i, j].transform.position = new Vector3(spriteX  +270 - (aAngleDeg - euler), spriteY, 0f);
+                    //targets[j, i].transform.position = new Vector3(spriteX - 10, spriteY, 0f);
+                    //targets[j, i].transform.position = new Vector3(spriteX - 2, spriteY, 0f); //TEST
                     //flowerPrefab.transform.position = new Vector3(spriteX - 1, spriteY + 1, 0f); //TEST
                     //flowerPrefab.transform.position = new Vector3(150, 0, 0f); //TEST
-                    //Debug.Log("Target " + targets[i, j] + " position " + targets[i, j].transform.position + "SCALE " + targets[i, j].transform.localScale);
-                    //   renderers[i, j].color = new Color(newSize2, dist, 0.6f);
-                    //   renderers[i, j].sortingOrder = (int)newSize2 * 10; //HUOM ei välilyöntiä (int)newSize2 // TEST
+                    //Debug.Log("Target " + targets[j, i] + " position " + targets[i, j].transform.position + "SCALE " + targets[i, j].transform.localScale);
+                    //   renderers[j, i].color = new Color(newSize2, dist, 0.6f);
+                    //   renderers[j, i].sortingOrder = (int)newSize2 * 10; //HUOM ei välilyöntiä (int)newSize2 // TEST
                     landscape.transform.position = new Vector2(euler, spriteY + 3);
                 landscape2.transform.position = new Vector2(euler + landscapeLenght, spriteY + 3);
-
+                    //miniCar.transform.position = new Vector2(objectPoolPosition.x + arraySize/2, objectPoolPosition.y + arraySize / 2);
+                    miniCar.transform.position = new Vector2(0 + arraySize / 2, -50 + arraySize / 2);
+                    //miniCar.transform.rotation = new Quaternion(myCar.transform.rotation.x, myCar.transform.rotation.y, myCar.transform.rotation.z - 180f, 0);
+                    miniCar.transform.rotation = myCar.transform.rotation;
                 }
 
             }
