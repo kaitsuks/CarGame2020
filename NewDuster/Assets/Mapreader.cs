@@ -52,6 +52,8 @@ public class Mapreader : MonoBehaviour
     public TileBase flagBlue;
     public TileBase flower;
 
+    public GameObject testSprite;
+
     private Vector2 objectPoolPosition;
 
     public GameObject landscape;
@@ -173,6 +175,9 @@ public class Mapreader : MonoBehaviour
                 local[j, i, 2] = 0;
                 //luodaan targetit taulukkoon
                 targets[i, j] = (GameObject)Instantiate(ruohoPrefab, new Vector2(objectPoolPosition.x + i, objectPoolPosition.y + j), Quaternion.identity);
+                
+                //targets[i, j] = ruohoPrefab;
+                targets[i, j].transform.position = new Vector2(0f + i, -50f + j);
                 renderers[i, j] = targets[i, j].GetComponent<SpriteRenderer>();
             }
         }
@@ -184,6 +189,7 @@ public class Mapreader : MonoBehaviour
     {
         carPosition = myCar.transform.position;
         gridPos = m_Grid.WorldToCell(carPosition);
+        gridPos.z = 0;
         //if (m_Collider.GetTile(gridPos) != null)
         //{
         //    Debug.Log("KOLARI AITAAN");
@@ -195,6 +201,8 @@ public class Mapreader : MonoBehaviour
 
     IEnumerator ReadMap()
     {
+        Vector3Int findPos;
+        findPos = new Vector3Int((gridPos.x) - arraySize / 2, (gridPos.y) - arraySize / 2, 0);
 
         //LUETAAN KOKO RUUDUKKO
         //Debug.Log("LUETAAN RUUDUKKO PAIKASSA " + gridPos);
@@ -203,19 +211,21 @@ public class Mapreader : MonoBehaviour
             //LUETAAN TAULUKKO
             for (int i = 0; i < arraySize; i++)
             {
+                //ALUSTETAAN TARGETTIEN PAIKAT
+               // targets[i, j].transform.position = new Vector2(spriteX + i, spriteY + j);
                 //TARKISTETAAN RUUTU
-                checkPos = new Vector3Int(gridPos.x + j, gridPos.y + i, 0);
+                checkPos = new Vector3Int((findPos.x + j), (findPos.y + i), 0);
                 //checkPos = new Vector3Int(gridPos.x + i, gridPos.y + j, 0); //TEST
                 if (m_Collider.GetTile(checkPos) != null)
                 {
-                    //Debug.Log("TOLPPA LÖYDETTY" + checkPos);
+                    //Debug.Log("TIETÄ LÖYDETTY " + checkPos);
                     local[j, i, 0] = 1;
                 }
 
                 //if (m_Foreground.GetTile(checkPos)  == redSign)
-                    if (m_Road.GetTile(checkPos) == redSign)
+                if (m_Road.GetTile(checkPos) == redSign)
                     {
-                    //Debug.Log("PUNAINEN TOLPPA LÖYDETTY" + checkPos);
+                  //  Debug.Log("PUNAINEN TOLPPA LÖYDETTY " + checkPos);
                     local[j, i, 0] = 2;
                     }
                 if (m_Road.GetTile(checkPos) == flagBlue)
@@ -234,53 +244,108 @@ public class Mapreader : MonoBehaviour
                 ////LASKETAAN ETÄISYYS
                 //dist = j / Mathf.Sin(aAngle);
                 //trigo[j, i, 1] = dist;
-            }
-        }
+           // }
+        //}
         //PIIRRETÄÄN TUULILASILLE
         
-        for (int j = 0; j < arraySize; j++)
-        {
+        //for (int j = 0; j < arraySize; j++)
+        //{
             //
-            for (int i = 0; i < arraySize; i++)
-            {
+            //for (int i = 0; i < arraySize; i++)
+            //{
                 //Debug.Log("Ruutu " + i * j);
-               
-                    
+
+
                 //TARKISTETAAN RUUTU
-                //if (local[j, i, 0] == 1 || local[j, i, 0] == 2 )
+                checkPos = new Vector3Int((findPos.x + j), (findPos.y + i), 0);
+                //if (local[j, i, 0] != 0 )
                 {
+                    //Vector3 check = new Vector3(j, i, 0);
+                    dist = Vector3.Distance(gridPos,  checkPos);
+                    // Debug.Log("gridPos,  checkPos, dist " + gridPos + "  " + checkPos + "  " + dist);
+
+                    if (local[j, i, 0] == 0)
+                    {
+                        targets[i, j] = ruohoPrefab;
+                        //targets[i, j] = (GameObject)Instantiate(ruohoPrefab, new Vector2(objectPoolPosition.x + i, objectPoolPosition.y + j), Quaternion.identity);
+                        //targets[i, j] = ruohoPrefab;
+                        //DrawObject(i, j);
+                        //StartCoroutine(DrawObject(i, j));
+                        // Debug.Log("PIIRRETTY TOLPPA " + i * j);
+                    }
+
                     if (local[j, i, 0] == 1)
                     {
-                        targets[i, j] = tolppaPrefab;
-                        DrawObject(i, j);
-                       // Debug.Log("PIIRRETTY TOLPPA " + i * j);
+                        targets[i, j] = flagBluePrefab;
+                        //renderers[i, j].sprite = tSprite;
+                        //DrawObject(i, j);
+                        //StartCoroutine(DrawObject(i, j));
+                        //Debug.Log("PIIRRETTY TOLPPA " + i * j);
                     }
+                    else
+                        targets[i, j] = ruohoPrefab;
+
                     if (local[j, i, 0] == 2)
                     {
                         targets[i, j] = tolppa2Prefab;
-                        DrawObject(i, j);
-                        Debug.Log("PIIRRETTY KAKTUS " + i * j);
+                        //DrawObject(i, j);
+                        //StartCoroutine(DrawObject(i, j));
+                        //  Debug.Log("PIIRRETTY punainen tolppa " + i * j);
                     }
+                    else
+                        targets[i, j] = ruohoPrefab;
+
                     if (local[j, i, 0] == 3)
                     {
                         targets[i, j] = flagBluePrefab;
-                        DrawObject(i, j);
-                        Debug.Log("PIIRRETTY SININEN LIPPU " + i * j);
+                        //DrawObject(i, j);
+                        //StartCoroutine(DrawObject(i, j));
+                        //  Debug.Log("PIIRRETTY SININEN LIPPU " + i * j);
                     }
+                    else
+                        targets[i, j] = ruohoPrefab;
+
                     if (local[j, i, 0] == 4)
                     {
                         targets[i, j] = flowerPrefab;
-                        DrawObject(i, j);
-                        Debug.Log("PIIRRETTY sininen KUKKA " + i * j);
+                        //StartCoroutine(DrawObject(i, j));
+                        //Debug.Log("PIIRRETTY sininen KUKKA " + i * j);
                     }
+                    else
+                        targets[i, j] = ruohoPrefab;
 
-                   
+
+                    aAngle = 2 * Mathf.PI - trigo[j, i, 0];
+                aAngleDeg = Mathf.Rad2Deg * aAngle;
+                //euler = 360f - euler; //TEST, EULER MENEE 360 ASTETTA VASTAPÄIVÄÄN
+                //aAngleDeg = aAngleDeg + euler; //TEST
+                //newSize2 = 1f;
+                newSize2 = newSize2 / (dist);  // / 10f; //sizeFactor //TEST
+                if (newSize2 > 5f) newSize2 = 5f; //rajoitin
+                if (newSize2 < 0.1f) newSize2 = 0.1f; //rajoitin
+                scaleVector = new Vector3(1f, newSize2, 1f);
+                //targets[i, j].transform.position = new Vector3(spriteX + aAngle * 120 - 130 + euler / 10, spriteY +1f +dist/100, 0f);
+                targets[i, j].transform.position = new Vector3(spriteX - aAngleDeg /24 + euler / 24, spriteY + dist / 10, 0f);
+              //  testSprite.transform.position = new Vector3(spriteX - aAngleDeg / 24 + euler / 24, spriteY + dist / 10, 0f);
+
+                    //targets[i, j].transform.position = new Vector3(spriteX -10 - (aAngleDeg - euler), spriteY, 0f);
+                    //targets[i, j].transform.position = new Vector3(spriteX - 10, spriteY, 0f);
+                    //targets[i, j].transform.position = new Vector3(spriteX - 2, spriteY, 0f); //TEST
+                    //flowerPrefab.transform.position = new Vector3(spriteX - 1, spriteY + 1, 0f); //TEST
+                    //flowerPrefab.transform.position = new Vector3(150, 0, 0f); //TEST
+                    //Debug.Log("Target " + targets[i, j] + " position " + targets[i, j].transform.position + "SCALE " + targets[i, j].transform.localScale);
+                    //   renderers[i, j].color = new Color(newSize2, dist, 0.6f);
+                    //   renderers[i, j].sortingOrder = (int)newSize2 * 10; //HUOM ei välilyöntiä (int)newSize2 // TEST
+                    landscape.transform.position = new Vector2(euler, spriteY + 3);
+                landscape2.transform.position = new Vector2(euler + landscapeLenght, spriteY + 3);
 
                 }
 
-
             }
         }
+
+        //flowerPrefab.transform.position = new Vector3(spriteX - 1, spriteY + 1, 0f); //TEST
+        //rightM1.transform.position = new Vector3(spriteX - 1, spriteY + 3, 0f); //TEST
 
         //TYHJENNETÄÄN TAULUKKO
         for (int j = 0; j < arraySize; j++)
@@ -288,9 +353,9 @@ public class Mapreader : MonoBehaviour
             for (int i = 0; i < arraySize; i++)
             {
                 //TYHJENNETÄÄN RUUTU
-                local[j, i, 0] = 0;
+                //local[j, i, 0] = 0; //TEST
                 //tyhjennetään prefabit
-                targets[i, j] = ruohoPrefab;
+                //targets[i, j] = ruohoPrefab; // TEST ei jaksa pyörittää
             }
         }
         //Debug.Log("TAULUKKO TYHJENNETTY");
@@ -355,11 +420,12 @@ public class Mapreader : MonoBehaviour
         //KAHDEKSAN ILMANSUUNNAN MUKAAN LUETTAVA RUUDUT
         //Debug.Log(" EULER " + euler);
         //Debug.Log(" ROTATION " + myCar.transform.rotation);
-        yield return new WaitForSeconds(0.5f);
+       
+        yield return new WaitForSeconds(1.5f);
     }
 
-    void DrawObject(int i, int j)
-    {
+    IEnumerator DrawObject(int i, int j)
+    { 
         //Debug.Log("PIIRRETÄÄN TOLPPA " + j *  i);
         //KULMA
         //aAngle = trigo[j, i, 0] + euler;
@@ -371,9 +437,9 @@ public class Mapreader : MonoBehaviour
         aAngleDeg = Mathf.Rad2Deg * aAngle;
         //Debug.Log(" ANGLE ASTEINA TOLPPAAN " + aAngleDeg);
         //ETÄISYYS
-        dist = trigo[j, i, 1];
-        if (float.IsNaN(dist)) dist = 0.1f; //TESTI
-        //Debug.Log(" ETÄISYYS TOLPPAAN " + dist);
+        //dist = trigo[j, i, 1]; // LASKETTU VEKTOREILLA
+        //  if (float.IsNaN(dist)) dist = 0.1f; //TURHA NYT
+        //  Debug.Log(" ETÄISYYS TOLPPAAN " + dist);
         //euler = 360f - euler; //TEST, EULER MENEE 360 ASTETTA VASTAPÄIVÄÄN
         //aAngleDeg = aAngleDeg + euler; //TEST
         //Debug.Log(" DISTANSSI ON TOLPPAAN " + dist);
@@ -382,10 +448,10 @@ public class Mapreader : MonoBehaviour
         //newSize2 = 1f;
         //Debug.Log(" ORIGINAALI SKAALA ON " + newSize);
         //newSize = rightM1.transform.localScale.y * dist;
-        //newSize = 1f;
-        newSize2 = targets[i, j].transform.localScale.y;
+        newSize2 = 1f;
+        // newSize2 = targets[i, j].transform.localScale.y;
         //newSize2 = newSize2 * (dist) /100f; //sizeFactor
-        newSize2 = newSize2 / (dist);  // / 10f; //sizeFactor //TEST
+        //   newSize2 = newSize2 / (dist);  // / 10f; //sizeFactor //TEST
         if (newSize2 > 5f) newSize2 = 5f; //rajoitin
         if (newSize2 < 0.1f) newSize2 = 0.1f; //rajoitin
                                               //Debug.Log(" UUSITTU Y SKAALA ON " + newSize2);
@@ -397,25 +463,30 @@ public class Mapreader : MonoBehaviour
         //{
         //    //Do stuff
         //}
-        if (!float.IsNaN(newSize2))
+        //  if (!float.IsNaN(newSize2))
         {
             scaleVector = new Vector3(1f, newSize2, 1f);
             //rightM1.transform.localScale = scaleVector;
             //rightM1.transform.position = new Vector3(- (aAngle/30 -15), spriteY - 10, 0f);
-            targets[i, j].transform.localScale = scaleVector;
+            //    targets[i, j].transform.localScale = scaleVector; // TEST
             //targets[i, j].transform.position = new Vector3(spriteX + aAngle * xSkaalain - 3, spriteY - 3f, 0f);
             //if (euler - aAngle < 45f)
             {
                 //targets[i, j].transform.position = new Vector3(spriteX + aAngle * 120 - 130 + euler / 10, spriteY +1f +dist/100, 0f);
                 //targets[i, j].transform.position = new Vector3(spriteX - aAngleDeg /24 + euler / 24, spriteY + dist / 10, 0f);
-                targets[i, j].transform.position = new Vector3(spriteX -10 + (aAngleDeg - euler), spriteY, 0f);
-                renderers[i, j].color = new Color(newSize2, dist, 0.6f);
-                renderers[i, j].sortingOrder = (int)newSize2 * 10; //HUOM ei välilyöntiä (int)newSize2
+                //targets[i, j].transform.position = new Vector3(spriteX -10 + (aAngleDeg - euler), spriteY, 0f);
+                //targets[i, j].transform.position = new Vector3(spriteX - 10, spriteY, 0f);
+                //targets[i, j].transform.position = new Vector3(50, 0, 0f); //TEST
+                flowerPrefab.transform.position = new Vector3(150, 0, 0f); //TEST
+                Debug.Log(" Target " + targets[i, j] + " position " + targets[i, j].transform.position  + "SCALE " + targets[i, j].transform.localScale);
+                //   renderers[i, j].color = new Color(newSize2, dist, 0.6f);
+                //   renderers[i, j].sortingOrder = (int)newSize2 * 10; //HUOM ei välilyöntiä (int)newSize2 // TEST
                 landscape.transform.position = new Vector2(euler, spriteY + 3);
                 landscape2.transform.position = new Vector2(euler + landscapeLenght, spriteY + 3);
 
             }
         }
-        return;
+        yield return new WaitForSeconds(0.5f);
+        // return; // TEST
     }
 }

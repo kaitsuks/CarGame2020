@@ -11955,6 +11955,12 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &116308104 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8913498510298569726, guid: a6ce85837a54c30499ca109ea975e97c,
+    type: 3}
+  m_PrefabInstance: {fileID: 3459071413486075044}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &141045246
 GameObject:
   m_ObjectHideFlags: 0
@@ -12119,19 +12125,15 @@ MonoBehaviour:
   leftM3: {fileID: 524152539}
   leftM4: {fileID: 1737229449}
   leftM5: {fileID: 914675940}
-  tolppaPrefab: {fileID: 5564068007835752365, guid: 47a19bc622e12e840abb61a44ea7dd8b,
-    type: 3}
-  tolppa2Prefab: {fileID: 394204855683158125, guid: 6c67c37a66edeb3459da5f2fd0f4e04a,
-    type: 3}
-  flagBluePrefab: {fileID: 5018840865663278963, guid: bc6cdc85f36566c4891d6460e2db9528,
-    type: 3}
-  flowerPrefab: {fileID: 4632125386433972872, guid: dc818fe686030714fba3810f33e11196,
-    type: 3}
-  ruohoPrefab: {fileID: 5564068007835752365, guid: 47a19bc622e12e840abb61a44ea7dd8b,
-    type: 3}
+  tolppaPrefab: {fileID: 729536187}
+  tolppa2Prefab: {fileID: 681963373}
+  flagBluePrefab: {fileID: 116308104}
+  flowerPrefab: {fileID: 1214813237}
+  ruohoPrefab: {fileID: 729536187}
   redSign: {fileID: 11400000, guid: 44a82bb3eeab5474099276470bb22691, type: 2}
   flagBlue: {fileID: 11400000, guid: edb8910ec072e6c418c91a2ad84dfd5d, type: 2}
   flower: {fileID: 11400000, guid: 4f9e15d068442ad47b07430d2bce51f9, type: 2}
+  testSprite: {fileID: 116308104}
   landscape: {fileID: 1623598828}
   landscape2: {fileID: 141045246}
   xSkaalain: 200
@@ -12667,6 +12669,12 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &681963373 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 394204855683158125, guid: 6c67c37a66edeb3459da5f2fd0f4e04a,
+    type: 3}
+  m_PrefabInstance: {fileID: 3959515906697536757}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &725594496
 GameObject:
   m_ObjectHideFlags: 0
@@ -12740,6 +12748,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 725594496}
   m_CullTransparentMesh: 0
+--- !u!1 &729536187 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5564068007835752365, guid: 47a19bc622e12e840abb61a44ea7dd8b,
+    type: 3}
+  m_PrefabInstance: {fileID: 81779635085332093}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &768305104 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5192308862734272342, guid: 25df73ced2516c849b186ce21c35485d,
@@ -85750,6 +85764,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1127435525}
   m_CullTransparentMesh: 0
+--- !u!1 &1214813237 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4125209015280217671, guid: 25df73ced2516c849b186ce21c35485d,
+    type: 3}
+  m_PrefabInstance: {fileID: 6707522908217138128}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1311937233
 GameObject:
   m_ObjectHideFlags: 0
@@ -99517,6 +99537,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3631281736740799470, guid: 47a19bc622e12e840abb61a44ea7dd8b,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3631281736740799470, guid: 47a19bc622e12e840abb61a44ea7dd8b,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8960075810795168355, guid: 47a19bc622e12e840abb61a44ea7dd8b,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.6188331
+      objectReference: {fileID: 0}
+    - target: {fileID: 8960075810795168355, guid: 47a19bc622e12e840abb61a44ea7dd8b,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.8301887
+      objectReference: {fileID: 0}
+    - target: {fileID: 8960075810795168355, guid: 47a19bc622e12e840abb61a44ea7dd8b,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.30936277
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 47a19bc622e12e840abb61a44ea7dd8b, type: 3}
 --- !u!1001 &3459071413486075044
@@ -99811,17 +99856,32 @@ PrefabInstance:
     - target: {fileID: 5192308862734272342, guid: 25df73ced2516c849b186ce21c35485d,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5192308862734272342, guid: 25df73ced2516c849b186ce21c35485d,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 7.1428566
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5468930546921824886, guid: 25df73ced2516c849b186ce21c35485d,
         type: 3}
       propertyPath: m_SortingOrder
       value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 5468930546921824886, guid: 25df73ced2516c849b186ce21c35485d,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.38501248
+      objectReference: {fileID: 0}
+    - target: {fileID: 5468930546921824886, guid: 25df73ced2516c849b186ce21c35485d,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.7924528
+      objectReference: {fileID: 0}
+    - target: {fileID: 5468930546921824886, guid: 25df73ced2516c849b186ce21c35485d,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.48240066
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 25df73ced2516c849b186ce21c35485d, type: 3}
