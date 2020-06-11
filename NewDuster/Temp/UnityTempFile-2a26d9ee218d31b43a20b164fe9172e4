@@ -341,6 +341,7 @@ Assets\Scripts\KKSColumn.cs
 Assets\Scripts\KKSColumnPool.cs
 Assets\Scripts\KKSGameControl.cs
 Assets\Scripts\LoadLevelAction.cs
+Assets\Scripts\MapreaderDirty.cs
 Assets\Scripts\ModifyHealthAttribute.cs
 Assets\Scripts\Move.cs
 Assets\Scripts\MoveCameraWithArrows.cs

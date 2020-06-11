@@ -301,7 +301,6 @@ Assets\DrivingScripts\FlappyGameControl.cs
 Assets\DrivingScripts\GameControl.cs
 Assets\DrivingScripts\RepeatingBackground.cs
 Assets\DrivingScripts\ScrollingObject.cs
-Assets\Mapreader.cs
 Assets\Scripts\Action.cs
 Assets\Scripts\AlbiAutoCollection.cs
 Assets\Scripts\AutoMove.cs
@@ -341,6 +340,8 @@ Assets\Scripts\KKSColumn.cs
 Assets\Scripts\KKSColumnPool.cs
 Assets\Scripts\KKSGameControl.cs
 Assets\Scripts\LoadLevelAction.cs
+Assets\Scripts\Mapreader.cs
+Assets\Scripts\MapreaderDirty.cs
 Assets\Scripts\ModifyHealthAttribute.cs
 Assets\Scripts\Move.cs
 Assets\Scripts\MoveCameraWithArrows.cs

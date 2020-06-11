@@ -191,7 +191,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0.89, y: 0.55499995, z: 0}
+  m_ChunkCullingBounds: {x: 0.89, y: 1.6099999, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 0
@@ -12191,29 +12191,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 168219130}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d33929b6def8d84eaec4e4d90a1fd45, type: 3}
+  m_Script: {fileID: 11500000, guid: be288a95f921c8d42856457b572466ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tieTiili: {fileID: 0}
-  kiviTiili: {fileID: 0}
   m_Explosion: {fileID: 0}
   myCar: {fileID: 430488414}
+  miniCar: {fileID: 114523573}
   rightM1: {fileID: 1830160517}
-  rightM2: {fileID: 1311937233}
-  rightM3: {fileID: 837432568}
-  rightM4: {fileID: 436683269}
-  rightM5: {fileID: 1646153635}
   leftM1: {fileID: 931323967}
-  leftM2: {fileID: 1863841366}
-  leftM3: {fileID: 524152539}
-  leftM4: {fileID: 1737229449}
-  leftM5: {fileID: 914675940}
   tolppaPrefab: {fileID: 729536187}
   tolppa2Prefab: {fileID: 681963373}
   flagBluePrefab: {fileID: 116308104}
   flowerPrefab: {fileID: 1214813237}
   ruohoPrefab: {fileID: 729536187}
-  miniCar: {fileID: 114523573}
+  tieTiili: {fileID: 0}
+  kiviTiili: {fileID: 0}
   redSign: {fileID: 11400000, guid: 44a82bb3eeab5474099276470bb22691, type: 2}
   flagBlue: {fileID: 11400000, guid: edb8910ec072e6c418c91a2ad84dfd5d, type: 2}
   flower: {fileID: 11400000, guid: 4f9e15d068442ad47b07430d2bce51f9, type: 2}
@@ -13450,7 +13442,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -3
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0.89, y: 0.55499995, z: 0}
+  m_ChunkCullingBounds: {x: 0.89, y: 1.6099999, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 0
@@ -87550,7 +87542,7 @@ TilemapRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
-  m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
+  m_ChunkCullingBounds: {x: 0, y: 0.19999999, z: 0}
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 0
