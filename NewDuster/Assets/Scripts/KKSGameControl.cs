@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
+//using UnityEngine.SceneManagement;
 
 namespace KaitsuCar
 {
@@ -30,6 +30,8 @@ namespace KaitsuCar
                 //...destroy this one because it is a duplicate.
                 Destroy(gameObject);
             carRB = car.GetComponent<Rigidbody2D>();
+            score = GameManager.instance.score;
+            scoreText.text = "Score: " + score.ToString();
         }
 
         void Update()
@@ -38,7 +40,7 @@ namespace KaitsuCar
             if (gameOver && Input.GetMouseButtonDown(0))
             {
                 //...reload the current scene.
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
 
@@ -48,7 +50,9 @@ namespace KaitsuCar
             if (gameOver)
                 return;
             //If the game is not over, increase the score...
+            score = GameManager.instance.score;
             score++;
+            GameManager.instance.score = score;
             //...and adjust the score text.
             scoreText.text = "Score: " + score.ToString();
         }
@@ -69,6 +73,40 @@ namespace KaitsuCar
             //...and adjust the condition text.
             conditionText.text = "Condition: " + condition.ToString();
         }
+
+        //public void Play()
+        //{
+        //    SceneManager.LoadScene("MainSkene");
+        //}
+
+        //public void FlappyCar1()
+        //{
+        //    SceneManager.LoadScene("FlappyCar1");
+        //}
+
+        //public void FlappyCar2()
+        //{
+        //    SceneManager.LoadScene("FlappyCar2");
+        //}
+
+        //public void Settings()
+        //{
+        //    SceneManager.LoadScene("Settings");
+        //}
+
+        //public void Quit()
+        //{
+        //    Application.Quit();
+        //}
+
+
+
+        //public void Instructions()
+        //{
+        //    SceneManager.LoadScene("Instructions");
+        //}
     }
 
 }
+
+

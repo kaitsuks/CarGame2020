@@ -58,7 +58,7 @@ namespace KaitsuCar {
                 if (Input.GetMouseButtonDown(0))
                 {
                     //...tell the animator about it and then...
-                    anim.SetTrigger("Flap");
+                    //anim.SetTrigger("Flap");
                     //...zero out the birds current y velocity before...
                     rb2d.velocity = Vector2.zero;
                     //    new Vector2(rb2d.velocity.x, 0);

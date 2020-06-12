@@ -34,7 +34,7 @@ public class Mapreader : MonoBehaviour
     private GameObject[,] targets;
     private SpriteRenderer[,] renderers; 
     private GameObject[,] targets2;
-
+    private SpriteRenderer[,] renderers2;
     //karttaobjekteja - targetteja
     public GameObject tolppaPrefab;
     public GameObject tolppa2Prefab;
@@ -142,6 +142,7 @@ public class Mapreader : MonoBehaviour
         targets = new GameObject[arraySize, arraySize];
         targets2 = new GameObject[arraySize, arraySize];
         renderers = new SpriteRenderer[arraySize, arraySize];
+        renderers2 = new SpriteRenderer[arraySize, arraySize];
         //rightM1renderer =  rightM1.GetComponent<SpriteRenderer>();
         //rightM2renderer =  rightM2.GetComponent<SpriteRenderer>();
         //rightM3renderer =  rightM3.GetComponent<SpriteRenderer>();
@@ -178,7 +179,8 @@ public class Mapreader : MonoBehaviour
             {
                 //LASKETAAN KULMA
                 
-                aAngle = Mathf.Atan2(j + arraySize/2, i + arraySize / 2);
+                //aAngle = Mathf.Atan2(j + arraySize/2, i + arraySize / 2);
+                aAngle = Mathf.Atan2(j - i, i/2);
                 trigo[j, i, 0] = aAngle;
                 //LASKETAAN ETÄISYYS
                 dist = j / Mathf.Sin(aAngle);
@@ -190,7 +192,9 @@ public class Mapreader : MonoBehaviour
                 //luodaan targetit taulukkoon
                 targets[j, i] = (GameObject)Instantiate(ruohoPrefab, new Vector2(objectPoolPosition.x + i, objectPoolPosition.y + j), Quaternion.identity);
                 targets[j, i].transform.position = new Vector2(0f + j, -50f + i);
+                targets2[j, i] = (GameObject)Instantiate(ruohoPrefab, new Vector2(objectPoolPosition.x + i, objectPoolPosition.y + j), Quaternion.identity);
                 renderers[j, i] = targets[j, i].GetComponent<SpriteRenderer>();
+                renderers2[j, i] = targets2[j, i].GetComponent<SpriteRenderer>();
             }
         }
 
@@ -279,6 +283,7 @@ public class Mapreader : MonoBehaviour
                     if (local[j, i, 0] == 1)
                     {
                         targets[j, i] = flagBluePrefab;
+                        targets2[j, i] = flagBluePrefab;
                         renderers[j, i].sprite = flagBlueSprite;
                     }
                     //else
@@ -287,16 +292,19 @@ public class Mapreader : MonoBehaviour
                     if (local[j, i, 0] == 2)
                     {
                         targets[j, i] = tolppa2Prefab;
+                        targets2[j, i] = tolppa2Prefab;
                         renderers[i, j].sprite = flagRedSprite;
                     }
                     if (local[j, i, 0] == 3)
                     {
                         targets[j, i] = flagBluePrefab;
+                        targets2[j, i] = flagBluePrefab;
                         renderers[j, i].sprite = flagBlueSprite;
                     }
                     if (local[j, i, 0] == 4)
                     {
                         targets[i, j] = flowerPrefab;
+                        targets2[i, j] = flowerPrefab;
                         renderers[i, j].sprite = flowerSprite;
                     }
                 }
@@ -311,27 +319,34 @@ public class Mapreader : MonoBehaviour
                         {
                 //Debug.Log("Ruutu " + i * j);
                 //VIITTAUS PITÄIS VAIHTAA KLOONIIN
-                if (targets2[j, i] == null)
-                {
-                    targets2[j, i] = GameObject.Instantiate(targets[j, i]);
-                }
+
+                // testi
+
+                //if (targets2[j, i] == null)
+                //{
+                //    targets2[j, i] = GameObject.Instantiate(targets[j, i]);
+                //}
+
                 //Debug.Log("TARGET2 " + targets2[j, i]);
 
                 //HAETAAN SUUNTAKULMA
-                aAngle = 2 * Mathf.PI - trigo[j, i, 0];
-                            //aAngle = trigo[j, i, 0];
-                            //MUUNNETAAN ASTEIKSI
-                            aAngleDeg = Mathf.Rad2Deg * aAngle - 90;
+                //aAngle = 2 * Mathf.PI - trigo[j, i, 0];
+                aAngle = trigo[j, i, 0];
+                //MUUNNETAAN ASTEIKSI
+                aAngleDeg = Mathf.Rad2Deg * aAngle - 270; // - 90;
+                //Debug.Log("TARGET   " + targets2[j, i] +"  " + aAngleDeg);
                 //miniCar.transform.rotation = myCar.transform.rotation;
-                //euler = 360f - euler; //TEST, EULER MENEE 360 ASTETTA VASTAPÄIVÄÄN
-                
-                if (dist > 0f)
+                euler = 360f - euler; //TEST, EULER MENEE 360 ASTETTA VASTAPÄIVÄÄN TEST
+                newSize2 = 2; //ALKUARVO
+                if (dist > 1f)
                 {
-                    newSize2 = 12 * newSize2 / (dist);  // / 10f; //sizeFactor //TEST
+                    newSize2 = 6 * newSize2 / (dist);  // / 10f; //sizeFactor //TEST
                 }
                             if (newSize2 > 10f) newSize2 = 10f; //rajoitin
                             if (newSize2 < 0.1f) newSize2 = 0.1f; //rajoitin
-                            
+
+              //  newSize2 = 2; //TEST
+
                 if (targets2[i, j] != null)
                 {
                     if (!float.IsNaN(newSize2))
@@ -339,13 +354,16 @@ public class Mapreader : MonoBehaviour
                         scaleVector = new Vector3(1f, newSize2, 1f);
                         targets2[i, j].transform.localScale = scaleVector;
                     }
-                    targets2[j, i].GetComponent<SpriteRenderer>().sprite = renderers[j, i].sprite;
+                    renderers2[j, i].sprite = renderers[j, i].sprite; //pitää olla muuten siniset liput ei näy
                     
-                    targets2[j, i].transform.position = new Vector3(spriteX + 40 + (aAngleDeg - euler)/3, spriteY -2 + dist/2, 0f);
+           //KOE         targets2[j, i].transform.position = new Vector3(spriteX - (euler * 2 - aAngleDeg)/12, spriteY -6 + dist, 0f);
+                    targets2[j, i].transform.position = new Vector3(spriteX +32 - (euler - aAngleDeg)/16, spriteY - 6 + dist, 0f);
+                    //targets2[j, i].transform.position = new Vector3(spriteX - aAngleDeg - euler -45, spriteY +1, 0f);
                     //targets2[j, i].transform.position = new Vector3(-20, -30, 0f);
+                    //  targets[j, i].transform.position = new Vector3(spriteX - aAngleDeg - euler - 45, spriteY + 1, 0f);
 
                     //Debug.Log("Target " + targets2[j, i] + " position " + targets2[j, i].transform.position + "SCALE " + targets2[j, i].transform.localScale);
-                    //   renderers[j, i].color = new Color(newSize2, dist, 0.6f); //VÄRI ETÄISYYDEN MUKAAN
+                       renderers[j, i].color = new Color(newSize2, dist, 0.6f); //VÄRI ETÄISYYDEN MUKAAN
                     //   renderers[j, i].sortingOrder = (int)newSize2 * 10; //HUOM ei välilyöntiä (int)newSize2 // JÄRJESTYS ETÄISYYDEN MUKAAN
 
                 } //not null
@@ -364,18 +382,20 @@ public class Mapreader : MonoBehaviour
                 {
                     //TYHJENNETÄÄN RUUTU
                     local[j, i, 0] = 0; //TEST
-                                        //tyhjennetään prefabit
-                                        targets2[j, i] = ruohoPrefab; // TEST ei jaksa pyörittää, vai jaksaako?
+                    //tyhjennetään prefabit
+                    targets2[j, i] = ruohoPrefab; // TEST ei jaksa pyörittää, vai jaksaako?
+                    targets[j, i] = ruohoPrefab;
                 //GameObject.Destroy(targets2[j, i]); //TEST, ei voi tuhota
-                }
+            }
             }
             //Debug.Log("TAULUKKO TYHJENNETTY");
 
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(0.1f);
         }
     
     //TÄMÄ COROUTINE EI KÄYTÖSSÄ
-    IEnumerator DrawObject(int i, int j)
+    //IEnumerator DrawObject(int i, int j)
+    void DrawObject(int i, int j)
     { 
         //Debug.Log("PIIRRETÄÄN TOLPPA " + j *  i);
         //KULMA
@@ -437,7 +457,7 @@ public class Mapreader : MonoBehaviour
 
             }
         }
-        yield return new WaitForSeconds(0.5f);
+        //yield return new WaitForSeconds(0.5f);
         // return; // TEST
     }
 }

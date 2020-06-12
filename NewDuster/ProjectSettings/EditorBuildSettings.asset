@@ -11,4 +11,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Ajoskene1A.unity
     guid: ec47ae4ed3d9f1b4da0772e526bc4313
+  - enabled: 1
+    path: Assets/Scenes/FlappyCar1.unity
+    guid: 02a9617c7712fca43aeb0a19fcccfadf
+  - enabled: 1
+    path: Assets/Scenes/FlappyCar2.unity
+    guid: e77f753b6d1fd174782c978a4b181a9e
+  - enabled: 1
+    path: Assets/Scenes/FloppyCar3.unity
+    guid: abcbe4ddfe857f047870cc003cd6c51d
   m_configObjects: {}
