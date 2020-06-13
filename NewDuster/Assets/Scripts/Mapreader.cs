@@ -32,8 +32,9 @@ public class Mapreader : MonoBehaviour
     //kohdetaulukOT
     int arraySize = 12;
     private GameObject[,] targets;
-    private SpriteRenderer[,] renderers; 
-    private GameObject[,] targets2;
+    private SpriteRenderer[,] renderers;
+    public GameObject target;
+    public GameObject[,] targets2;
     private SpriteRenderer[,] renderers2;
     //karttaobjekteja - targetteja
     public GameObject tolppaPrefab;
@@ -167,7 +168,7 @@ public class Mapreader : MonoBehaviour
     private void Start()
     {
         
-        StartCoroutine(ReadMap());
+        //StartCoroutine(ReadMap());
     }
 
     void InitGame()
@@ -178,9 +179,10 @@ public class Mapreader : MonoBehaviour
             for(int i = 0; i < arraySize; i++)
             {
                 //LASKETAAN KULMA
-                
-                //aAngle = Mathf.Atan2(j + arraySize/2, i + arraySize / 2);
-                aAngle = Mathf.Atan2(j - i, i/2);
+                //TÄMÄ VIELÄ TARKISTETTAVA
+                aAngle = Mathf.Atan2(-(j - arraySize/2), -(i - arraySize / 2));
+
+                //aAngle = Mathf.Atan2(j - i, i/2);
                 trigo[j, i, 0] = aAngle;
                 //LASKETAAN ETÄISYYS
                 dist = j / Mathf.Sin(aAngle);
@@ -193,6 +195,8 @@ public class Mapreader : MonoBehaviour
                 targets[j, i] = (GameObject)Instantiate(ruohoPrefab, new Vector2(objectPoolPosition.x + i, objectPoolPosition.y + j), Quaternion.identity);
                 targets[j, i].transform.position = new Vector2(0f + j, -50f + i);
                 targets2[j, i] = (GameObject)Instantiate(ruohoPrefab, new Vector2(objectPoolPosition.x + i, objectPoolPosition.y + j), Quaternion.identity);
+                //targets2[j, i] = ruohoPrefab;
+                //targets2[j, i] = targets[j, i];
                 renderers[j, i] = targets[j, i].GetComponent<SpriteRenderer>();
                 renderers2[j, i] = targets2[j, i].GetComponent<SpriteRenderer>();
             }
@@ -205,16 +209,22 @@ public class Mapreader : MonoBehaviour
     {
         carPosition = myCar.transform.position;
         gridPos = m_Grid.WorldToCell(carPosition);
+        //Debug.Log("GRIDPOS " + gridPos);
         gridPos.z = 0;
         //if (m_Road.GetTile(gridPos) != null) //SIJAINNIN TESTAUS
         //{
         //    Debug.Log("KOLARI AITAAN");
         //}
         euler = 360f - myCar.transform.rotation.eulerAngles.z; //AJOSUUNTA KORJATTUNA
-        StartCoroutine(ReadMap());
+        //euler = 360f - euler; //TEST, EULER MENEE 360 ASTETTA VASTAPÄIVÄÄN TEST
+        //Debug.Log("EULER ALUKSI" + euler);
+        //StartCoroutine(ReadMap());
+        ReadMap();
+
     }
 
-    IEnumerator ReadMap()
+    void ReadMap()
+    //IEnumerator ReadMap()
     {
         int offsetX = arraySize / 2;
         int offsetY = arraySize / 2;
@@ -336,7 +346,7 @@ public class Mapreader : MonoBehaviour
                 aAngleDeg = Mathf.Rad2Deg * aAngle - 270; // - 90;
                 //Debug.Log("TARGET   " + targets2[j, i] +"  " + aAngleDeg);
                 //miniCar.transform.rotation = myCar.transform.rotation;
-                euler = 360f - euler; //TEST, EULER MENEE 360 ASTETTA VASTAPÄIVÄÄN TEST
+                //
                 newSize2 = 2; //ALKUARVO
                 if (dist > 1f)
                 {
@@ -349,31 +359,39 @@ public class Mapreader : MonoBehaviour
 
                 if (targets2[i, j] != null)
                 {
-                    if (!float.IsNaN(newSize2))
-                    {
-                        scaleVector = new Vector3(1f, newSize2, 1f);
-                        targets2[i, j].transform.localScale = scaleVector;
-                    }
+                    //if (!float.IsNaN(newSize2))
+                    //{
+                    //    scaleVector = new Vector3(1f, newSize2, 1f);
+                    //    targets2[i, j].transform.localScale = scaleVector;
+                    //}
                     renderers2[j, i].sprite = renderers[j, i].sprite; //pitää olla muuten siniset liput ei näy
-                    
+                    float x = spriteX + 64 - (euler - aAngleDeg) / 8;
+                 //   float x = spriteX -90 - (aAngleDeg - euler) / 8;
+                    float y = spriteY - 6 + dist;
            //KOE         targets2[j, i].transform.position = new Vector3(spriteX - (euler * 2 - aAngleDeg)/12, spriteY -6 + dist, 0f);
-                    targets2[j, i].transform.position = new Vector3(spriteX +32 - (euler - aAngleDeg)/16, spriteY - 6 + dist, 0f);
+                    targets2[j, i].transform.position = new Vector3(x, y, 0f);
+                    //Debug.Log("euler " + euler);
                     //targets2[j, i].transform.position = new Vector3(spriteX - aAngleDeg - euler -45, spriteY +1, 0f);
                     //targets2[j, i].transform.position = new Vector3(-20, -30, 0f);
                     //  targets[j, i].transform.position = new Vector3(spriteX - aAngleDeg - euler - 45, spriteY + 1, 0f);
 
                     //Debug.Log("Target " + targets2[j, i] + " position " + targets2[j, i].transform.position + "SCALE " + targets2[j, i].transform.localScale);
-                       renderers[j, i].color = new Color(newSize2, dist, 0.6f); //VÄRI ETÄISYYDEN MUKAAN
-                    //   renderers[j, i].sortingOrder = (int)newSize2 * 10; //HUOM ei välilyöntiä (int)newSize2 // JÄRJESTYS ETÄISYYDEN MUKAAN
+                    renderers2[j, i].color = new Color(newSize2, dist, 0.6f); //VÄRI ETÄISYYDEN MUKAAN
+                                                                              //   renderers[j, i].sortingOrder = (int)newSize2 * 10; //HUOM ei välilyöntiä (int)newSize2 // JÄRJESTYS ETÄISYYDEN MUKAAN
 
-                } //not null
-                landscape.transform.position = new Vector2(euler, spriteY + 3);
-                            landscape2.transform.position = new Vector2(euler + landscapeLenght, spriteY + 3);
+                    //targets2[j, i].transform.position = new Vector2(0f + j, -80f + i);
+                    //targets2[j, i].transform.position = new Vector2(euler, spriteY + 3);
+                    //Debug.Log("euler " + euler);
+                    //target.transform.position = new Vector2(euler, spriteY + 3);
+                    landscape.transform.position = new Vector2(euler, spriteY + 3);
+                //Debug.Log("euler " + euler);
+                landscape2.transform.position = new Vector2(euler + landscapeLenght, spriteY + 3);
                             miniCar.transform.position = new Vector2(0 + arraySize / 2, -50 + arraySize / 2);
                             //miniCar.transform.rotation = new Quaternion(myCar.transform.rotation.x, myCar.transform.rotation.y, myCar.transform.rotation.z - 180f, 0);
                             miniCar.transform.rotation = myCar.transform.rotation;
-                        }
-                    }
+                } //not null
+            }
+         }
                 
             //TYHJENNETÄÄN TAULUKKO
             for (int j = 0; j < arraySize; j++)
@@ -390,7 +408,7 @@ public class Mapreader : MonoBehaviour
             }
             //Debug.Log("TAULUKKO TYHJENNETTY");
 
-            yield return new WaitForSeconds(0.1f);
+          //  yield return new WaitForSeconds(0.1f);
         }
     
     //TÄMÄ COROUTINE EI KÄYTÖSSÄ
