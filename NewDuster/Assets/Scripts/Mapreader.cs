@@ -9,7 +9,7 @@ public class Mapreader : MonoBehaviour
 
     
     public GameObject m_Explosion; //EI KÄYTÖSSÄ
-
+    public GameObject targetObject;
     public GameObject myCar; //AJOPELI
     public GameObject miniCar; //AJOPELI TOISAALLA
 
@@ -94,7 +94,11 @@ public class Mapreader : MonoBehaviour
     //AUTON TIEDOT
     private Vector3 carPosition;
     private float euler;
+    float oldEuler;
+    float frame;
+    float oldFrame;
     Vector3Int gridPos;
+    Vector3 oldCarPos;
     Vector3Int checkPos;
 
     //private Sprite leftPole;
@@ -202,13 +206,16 @@ public class Mapreader : MonoBehaviour
             }
         }
 
+        //StartCoroutine(ReadMap());
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         carPosition = myCar.transform.position;
-        gridPos = m_Grid.WorldToCell(carPosition);
+        oldCarPos = carPosition;
+        gridPos =  m_Grid.WorldToCell(carPosition);
         //Debug.Log("GRIDPOS " + gridPos);
         gridPos.z = 0;
         //if (m_Road.GetTile(gridPos) != null) //SIJAINNIN TESTAUS
@@ -216,16 +223,66 @@ public class Mapreader : MonoBehaviour
         //    Debug.Log("KOLARI AITAAN");
         //}
         euler = 360f - myCar.transform.rotation.eulerAngles.z; //AJOSUUNTA KORJATTUNA
+                                                               //oldEuler = euler;
+                                                               //StartCoroutine(ReadMap());
+        frame = Time.frameCount;
+        oldFrame = frame;
+
+        //FindDirection();
+        //StartCoroutine(FindDirection());
+        //Invoke("Find2", 3f);
+        //frame = Time.frameCount;
+        //if (oldFrame == frame) StartCoroutine(ReadMap());
+        //Debug.Log("oldFrame " + oldFrame + " frame " + frame);
+        //if (oldEuler != euler || oldCarPos != carPosition) StartCoroutine(ReadMap());
+        //if (oldEuler != euler || oldCarPos != carPosition) StartCoroutine(ReadMap()); 
         //euler = 360f - euler; //TEST, EULER MENEE 360 ASTETTA VASTAPÄIVÄÄN TEST
         //Debug.Log("EULER ALUKSI" + euler);
-        //StartCoroutine(ReadMap());
-        ReadMap();
+        StartCoroutine(ReadMap());
+        //StartCoroutine(FindDirection());
+        // ReadMap();
 
     }
 
-    void ReadMap()
-    //IEnumerator ReadMap()
+    void Find2()
     {
+        frame = Time.frameCount + 1f;
+        Debug.Log("oldFrame " + oldFrame + " frame " + frame);
+    }
+
+    //private void FindDirection()
+    private IEnumerator FindDirection()
+    {
+        WaitForSeconds wait = new WaitForSeconds(0.1f);
+        //euler = 360f - myCar.transform.rotation.eulerAngles.z; //AJOSUUNTA KORJATTUNA
+        //oldEuler = euler;
+        oldFrame = frame;
+        yield return wait;
+        //euler = 360f - myCar.transform.rotation.eulerAngles.z; //AJOSUUNTA KORJATTUNA
+        //carPosition = myCar.transform.position;
+        //if (oldEuler != euler) StartCoroutine(ReadMap());
+        //if(oldFrame == frame + 1f) StartCoroutine(ReadMap());
+       // Debug.Log("oldEuler " + oldEuler + " euler " + euler);
+        //Debug.Log("oldFrame " + oldFrame + " frame " + frame);
+
+    }
+   
+  //  void ReadMap()
+    IEnumerator ReadMap()
+    {
+        //carPosition = myCar.transform.position;
+        //oldCarPos = carPosition;
+        //gridPos = m_Grid.WorldToCell(carPosition);
+        ////Debug.Log("GRIDPOS " + gridPos);
+        //gridPos.z = 0;
+        //if (m_Road.GetTile(gridPos) != null) //SIJAINNIN TESTAUS
+        //{
+        //    Debug.Log("KOLARI AITAAN");
+        //}
+        euler = 360f - myCar.transform.rotation.eulerAngles.z; //AJOSUUNTA KORJATTUNA
+
+        //Debug.Log("oldFrame " + oldFrame + " frame " + frame);
+
         int offsetX = arraySize / 2;
         int offsetY = arraySize / 2;
         Vector3Int findPos;
@@ -382,7 +439,11 @@ public class Mapreader : MonoBehaviour
                     //targets2[j, i].transform.position = new Vector2(0f + j, -80f + i);
                     //targets2[j, i].transform.position = new Vector2(euler, spriteY + 3);
                     //Debug.Log("euler " + euler);
-                    //target.transform.position = new Vector2(euler, spriteY + 3);
+                   
+                    target.transform.position = new Vector2(euler, spriteY + 3);
+                    Vector3 targetP = new Vector3(target.transform.position.x, target.transform.position.y, 0);
+                    //targetP.transform.position = target.transform.position;
+                    targets[j, i].transform.position = targetP;
                     landscape.transform.position = new Vector2(euler, spriteY + 3);
                 //Debug.Log("euler " + euler);
                 landscape2.transform.position = new Vector2(euler + landscapeLenght, spriteY + 3);
@@ -408,7 +469,7 @@ public class Mapreader : MonoBehaviour
             }
             //Debug.Log("TAULUKKO TYHJENNETTY");
 
-          //  yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.1f);
         }
     
     //TÄMÄ COROUTINE EI KÄYTÖSSÄ
