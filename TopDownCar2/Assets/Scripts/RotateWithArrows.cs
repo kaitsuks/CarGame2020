@@ -11,7 +11,7 @@ public class RotateWithArrows : Physics2DObject
 	[Header("Rotation")]
 	public float speed = 5f;
 	
-	private float spin;
+	public float spin;
 	
 	
 	// Update gets called every frame

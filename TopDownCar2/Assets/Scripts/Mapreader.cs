@@ -12,6 +12,7 @@ public class Mapreader : MonoBehaviour
     public GameObject targetObject;
     public GameObject myCar; //AJOPELI
     public GameObject miniCar; //AJOPELI TOISAALLA
+    
 
     //FIRST PERSON VIEW -RAAMIT
     public GameObject rightM1;
@@ -119,6 +120,10 @@ public class Mapreader : MonoBehaviour
     
 
     public float xSkaalain = 3;
+    float suunta;
+    float uusisuunta;
+    float pushForceX;
+    float pushForceY;
 
     float newSize;
     float newSize2;
@@ -130,6 +135,9 @@ public class Mapreader : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        suunta = myCar.GetComponent<RotateWithArrows>().spin;
+        pushForceX = myCar.GetComponent<Push>().pushVector.x;
+        pushForceY = myCar.GetComponent<Push>().pushVector.y;
         m_Grid = GameObject.Find("Grid").GetComponent<Grid>();
         //m_Info = m_Grid.GetComponent<GridInformation>();
         m_Foreground = GameObject.Find("Tilemap").GetComponent<Tilemap>();
@@ -213,11 +221,14 @@ public class Mapreader : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        uusisuunta = suunta;
         carPosition = myCar.transform.position;
         oldCarPos = carPosition;
         gridPos =  m_Grid.WorldToCell(carPosition);
-        //Debug.Log("GRIDPOS " + gridPos);
+        suunta = myCar.GetComponent<RotateWithArrows>().spin;
+        pushForceX = myCar.GetComponent<Push>().pushVector.x;
+        pushForceY = myCar.GetComponent<Push>().pushVector.y;
+        Debug.Log("SUUNTA " + suunta);
         gridPos.z = 0;
         //if (m_Road.GetTile(gridPos) != null) //SIJAINNIN TESTAUS
         //{
@@ -231,7 +242,7 @@ public class Mapreader : MonoBehaviour
 
         //FindDirection();
         //StartCoroutine(FindDirection());
-        //Invoke("Find2", 3f);
+        // Invoke("Find2", 0.1f);
         //frame = Time.frameCount;
         //if (oldFrame == frame) StartCoroutine(ReadMap());
         //Debug.Log("oldFrame " + oldFrame + " frame " + frame);
@@ -240,233 +251,248 @@ public class Mapreader : MonoBehaviour
         //euler = 360f - euler; //TEST, EULER MENEE 360 ASTETTA VASTAPÄIVÄÄN TEST
         //Debug.Log("EULER ALUKSI" + euler);
 
-        StartCoroutine(ReadMap());
-
-        //StartCoroutine(FindDirection());
-        // ReadMap();
+        // StartCoroutine(ReadMap());
+        oldEuler = euler;
+        if (suunta != 0f || pushForceX != 0f || pushForceY != 0 )
+        {
+            StartCoroutine(FindDirection());
+        }
+        //if (oldFrame == frame) StartCoroutine(ReadMap());
+        //ReadMap();
 
     }
 
     void Find2()
     {
-        frame = Time.frameCount + 1f;
-        Debug.Log("oldFrame " + oldFrame + " frame " + frame);
+        frame = Time.frameCount;
+       // Debug.Log("oldFrame " + oldFrame + " frame " + frame);
     }
 
     //private void FindDirection()
     private IEnumerator FindDirection()
     {
-        WaitForSeconds wait = new WaitForSeconds(0.1f);
+       // Debug.Log("oldFrame " + oldFrame + " frame " + frame);
+        // WaitForSeconds wait = new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.2f);
         //euler = 360f - myCar.transform.rotation.eulerAngles.z; //AJOSUUNTA KORJATTUNA
         //oldEuler = euler;
-        oldFrame = frame;
-        yield return wait;
+        //oldFrame = frame;
+        frame = Time.frameCount;
+      //  Debug.Log("NOW oldFrame " + oldFrame + " frame " + frame);
+        StartCoroutine(ReadMap(euler));
+      //  ReadMap(euler);
+        // yield return wait;
         //euler = 360f - myCar.transform.rotation.eulerAngles.z; //AJOSUUNTA KORJATTUNA
         //carPosition = myCar.transform.position;
         //if (oldEuler != euler) StartCoroutine(ReadMap());
         //if(oldFrame == frame + 1f) StartCoroutine(ReadMap());
-       // Debug.Log("oldEuler " + oldEuler + " euler " + euler);
+        // Debug.Log("oldEuler " + oldEuler + " euler " + euler);
         //Debug.Log("oldFrame " + oldFrame + " frame " + frame);
 
     }
    
-  //  void ReadMap()
-    IEnumerator ReadMap()
+  // void ReadMap(float euler)
+   IEnumerator ReadMap(float euler)
     {
-        //carPosition = myCar.transform.position;
-        //oldCarPos = carPosition;
-        //gridPos = m_Grid.WorldToCell(carPosition);
-        Debug.Log("GRIDPOS " + gridPos);
-        //gridPos.z = 0;
-        //if (m_Road.GetTile(gridPos) != null) //SIJAINNIN TESTAUS
-        //{
-        //    Debug.Log("KOLARI AITAAN");
-        //}
-        euler = 360f - myCar.transform.rotation.eulerAngles.z; //AJOSUUNTA KORJATTUNA
-
-        //Debug.Log("oldFrame " + oldFrame + " frame " + frame);
-
-        int offsetX = arraySize / 2;
-        int offsetY = arraySize / 2;
-        Vector3Int findPos;
-        findPos = new Vector3Int((gridPos.x - offsetX), (gridPos.y - offsetY), 0);
-
-        //LUETAAN KOKO RUUDUKKO
-        //Debug.Log("LUETAAN RUUDUKKO PAIKASSA " + gridPos);
-        for (int j = 0; j < arraySize; j++)
+        //if (euler != oldEuler)
         {
-            //LUETAAN TAULUKKO
-            for (int i = 0; i < arraySize; i++)
+            //  yield return new WaitForSeconds(0.2f);
+
+            carPosition = myCar.transform.position;
+            oldCarPos = carPosition;
+            gridPos = m_Grid.WorldToCell(carPosition);
+            //  Debug.Log("GRIDPOS aluksi " + gridPos);
+            //gridPos.z = 0;
+            //if (m_Road.GetTile(gridPos) != null) //SIJAINNIN TESTAUS
+            //{
+            //    Debug.Log("KOLARI AITAAN");
+            //}
+            // euler = 360f - myCar.transform.rotation.eulerAngles.z; //AJOSUUNTA KORJATTUNA
+
+            //Debug.Log("oldFrame " + oldFrame + " frame " + frame);
+
+            int offsetX = arraySize / 2;
+            int offsetY = arraySize / 2;
+            Vector3Int findPos;
+            findPos = new Vector3Int((gridPos.x - offsetX), (gridPos.y - offsetY), 0);
+
+            //LUETAAN KOKO RUUDUKKO
+            //Debug.Log("LUETAAN RUUDUKKO PAIKASSA " + gridPos);
+            for (int j = 0; j < arraySize; j++)
             {
+                //LUETAAN TAULUKKO
+                for (int i = 0; i < arraySize; i++)
+                {
 
-                //TARKISTETAAN RUUTU
-                checkPos = new Vector3Int((findPos.x + j), (findPos.y + i), 0);
-                if (m_Collider.GetTile(checkPos) != null)
-                {
-                    //Debug.Log("TIETÄ LÖYDETTY " + checkPos);
-                    local[j, i, 0] = 1;
-                }
-                if (m_Road.GetTile(checkPos) == redSign)
-                {
-                    //  Debug.Log("PUNAINEN TOLPPA LÖYDETTY " + checkPos);
-                    local[j, i, 0] = 2;
-                }
-                if (m_Road.GetTile(checkPos) == flagBlue)
-                {
-                    local[j, i, 0] = 3;
-                }
-                if (m_Road.GetTile(checkPos) == flower)
-                {
-                    local[j, i, 0] = 4;
-                }
+                    //TARKISTETAAN RUUTU
+                    checkPos = new Vector3Int((findPos.x + j), (findPos.y + i), 0);
+                    if (m_Collider.GetTile(checkPos) != null)
+                    {
+                        //Debug.Log("TIETÄ LÖYDETTY " + checkPos);
+                        local[j, i, 0] = 1;
+                    }
+                    if (m_Road.GetTile(checkPos) == redSign)
+                    {
+                        //  Debug.Log("PUNAINEN TOLPPA LÖYDETTY " + checkPos);
+                        local[j, i, 0] = 2;
+                    }
+                    if (m_Road.GetTile(checkPos) == flagBlue)
+                    {
+                        local[j, i, 0] = 3;
+                    }
+                    if (m_Road.GetTile(checkPos) == flower)
+                    {
+                        local[j, i, 0] = 4;
+                    }
 
+                }
+            } // int j
+
+            //UUDET LOOPIT TÄHÄN?
+            //LUETAAN KOKO RUUDUKKO
+            //Debug.Log("LUETAAN RUUDUKKO PAIKASSA " + gridPos);
+            for (int j = 0; j < arraySize; j++)
+            {
+                //LUETAAN TAULUKKO
+                for (int i = 0; i < arraySize; i++)
+                {
+
+                    //TARKISTETAAN RUUTU
+                    checkPos = new Vector3Int((findPos.x + j), (findPos.y + i), 0);
+                    //if (local[j, i, 0] != 0 )
+                    {
+                        //ETÄISYYDEN LASKEMINEN VEKTOREILLA
+                        dist = Vector3.Distance(gridPos, checkPos);
+
+                        if (local[j, i, 0] == 0)
+                        {
+                            targets[j, i] = ruohoPrefab;
+                            renderers[j, i].sprite = ruohoSprite;
+                            //targets[i, j] = (GameObject)Instantiate(ruohoPrefab, new Vector2(objectPoolPosition.x + i, objectPoolPosition.y + j), Quaternion.identity);
+                            //targets[i, j] = ruohoPrefab;
+                            //DrawObject(i, j);
+                            //StartCoroutine(DrawObject(i, j));
+                            // Debug.Log("PIIRRETTY TOLPPA " + i * j);
+                        }
+
+                        if (local[j, i, 0] == 1)
+                        {
+                            targets[j, i] = flagBluePrefab;
+                            targets2[j, i] = flagBluePrefab;
+                            renderers[j, i].sprite = flagBlueSprite;
+                        }
+                        //else
+                        //    targets[i, j] = ruohoPrefab;
+
+                        if (local[j, i, 0] == 2)
+                        {
+                            targets[j, i] = tolppa2Prefab;
+                            targets2[j, i] = tolppa2Prefab;
+                            renderers[i, j].sprite = flagRedSprite;
+                        }
+                        if (local[j, i, 0] == 3)
+                        {
+                            targets[j, i] = flagBluePrefab;
+                            targets2[j, i] = flagBluePrefab;
+                            renderers[j, i].sprite = flagBlueSprite;
+                        }
+                        if (local[j, i, 0] == 4)
+                        {
+                            targets[i, j] = flowerPrefab;
+                            targets2[i, j] = flowerPrefab;
+                            renderers[i, j].sprite = flowerSprite;
+                        }
+                    }
+                }
             }
-        } // int j
 
-                //UUDET LOOPIT TÄHÄN?
-                //LUETAAN KOKO RUUDUKKO
-                //Debug.Log("LUETAAN RUUDUKKO PAIKASSA " + gridPos);
-                for (int j = 0; j < arraySize; j++)
+            //PIIRRETÄÄN TUULILASILLE
+
+            carPosition = myCar.transform.position;
+            oldCarPos = carPosition;
+            gridPos = m_Grid.WorldToCell(carPosition);
+            //  Debug.Log("GRIDPOS " + gridPos);
+            gridPos.z = 0;
+            //if (m_Road.GetTile(gridPos) != null) //SIJAINNIN TESTAUS
+            //{
+            //    Debug.Log("KOLARI AITAAN");
+            //}
+            // euler = 360f - myCar.transform.rotation.eulerAngles.z; //AJOSUUNTA KORJATTUNA
+
+            for (int j = 0; j < arraySize; j++)
+            {
+                for (int i = 0; i < arraySize; i++)
                 {
-                    //LUETAAN TAULUKKO
-                    for (int i = 0; i < arraySize; i++)
-                    {
+                    //Debug.Log("Ruutu " + i * j);
+                    //VIITTAUS PITÄIS VAIHTAA KLOONIIN
 
-                        //TARKISTETAAN RUUTU
-                        checkPos = new Vector3Int((findPos.x + j), (findPos.y + i), 0);
-                //if (local[j, i, 0] != 0 )
-                {
-                    //ETÄISYYDEN LASKEMINEN VEKTOREILLA
-                    dist = Vector3.Distance(gridPos, checkPos);
-                   
-                    if (local[j, i, 0] == 0)
-                    {
-                        targets[j, i] = ruohoPrefab;
-                        renderers[j, i].sprite = ruohoSprite;
-                        //targets[i, j] = (GameObject)Instantiate(ruohoPrefab, new Vector2(objectPoolPosition.x + i, objectPoolPosition.y + j), Quaternion.identity);
-                        //targets[i, j] = ruohoPrefab;
-                        //DrawObject(i, j);
-                        //StartCoroutine(DrawObject(i, j));
-                        // Debug.Log("PIIRRETTY TOLPPA " + i * j);
-                    }
+                    // testi
 
-                    if (local[j, i, 0] == 1)
-                    {
-                        targets[j, i] = flagBluePrefab;
-                        targets2[j, i] = flagBluePrefab;
-                        renderers[j, i].sprite = flagBlueSprite;
-                    }
-                    //else
-                    //    targets[i, j] = ruohoPrefab;
+                    //if (targets2[j, i] == null)
+                    //{
+                    //    targets2[j, i] = GameObject.Instantiate(targets[j, i]);
+                    //}
 
-                    if (local[j, i, 0] == 2)
+                    //Debug.Log("TARGET2 " + targets2[j, i]);
+
+                    //HAETAAN SUUNTAKULMA
+                    //aAngle = 2 * Mathf.PI - trigo[j, i, 0];
+                    aAngle = trigo[j, i, 0];
+                    //MUUNNETAAN ASTEIKSI
+                    aAngleDeg = Mathf.Rad2Deg * aAngle - 270; // - 90;
+                                                              //Debug.Log("TARGET   " + targets2[j, i] +"  " + aAngleDeg);
+                                                              //miniCar.transform.rotation = myCar.transform.rotation;
+                                                              //
+                    newSize2 = 2; //ALKUARVO
+                    if (dist > 1f)
                     {
-                        targets[j, i] = tolppa2Prefab;
-                        targets2[j, i] = tolppa2Prefab;
-                        renderers[i, j].sprite = flagRedSprite;
+                        newSize2 = 6 * newSize2 / (dist);  // / 10f; //sizeFactor //TEST
                     }
-                    if (local[j, i, 0] == 3)
+                    if (newSize2 > 10f) newSize2 = 10f; //rajoitin
+                    if (newSize2 < 0.1f) newSize2 = 0.1f; //rajoitin
+
+                    //  newSize2 = 2; //TEST
+
+                    if (targets2[i, j] != null)
                     {
-                        targets[j, i] = flagBluePrefab;
-                        targets2[j, i] = flagBluePrefab;
-                        renderers[j, i].sprite = flagBlueSprite;
-                    }
-                    if (local[j, i, 0] == 4)
-                    {
-                        targets[i, j] = flowerPrefab;
-                        targets2[i, j] = flowerPrefab;
-                        renderers[i, j].sprite = flowerSprite;
-                    }
+                        //if (!float.IsNaN(newSize2))
+                        //{
+                        //    scaleVector = new Vector3(1f, newSize2, 1f);
+                        //    targets2[i, j].transform.localScale = scaleVector;
+                        //}
+                        renderers2[j, i].sprite = renderers[j, i].sprite; //pitää olla muuten siniset liput ei näy
+                        float x = spriteX + suunta + 80 - (euler - aAngleDeg) / 8f;
+                        //   float x = spriteX -90 - (aAngleDeg - euler) / 8;
+                        float y = spriteY - 6f + dist;
+                        //KOE         targets2[j, i].transform.position = new Vector3(spriteX - (euler * 2 - aAngleDeg)/12, spriteY -6 + dist, 0f);
+                        targets2[j, i].transform.position = new Vector3(x, y, 0f);
+                        //Debug.Log("euler " + euler);
+                        //targets2[j, i].transform.position = new Vector3(spriteX - aAngleDeg - euler -45, spriteY +1, 0f);
+                        //targets2[j, i].transform.position = new Vector3(-20, -30, 0f);
+                        //  targets[j, i].transform.position = new Vector3(spriteX - aAngleDeg - euler - 45, spriteY + 1, 0f);
+
+                        //Debug.Log("Target " + targets2[j, i] + " position " + targets2[j, i].transform.position + "SCALE " + targets2[j, i].transform.localScale);
+                        renderers2[j, i].color = new Color(newSize2, dist, 0.6f); //VÄRI ETÄISYYDEN MUKAAN
+                                                                                  //   renderers[j, i].sortingOrder = (int)newSize2 * 10; //HUOM ei välilyöntiä (int)newSize2 // JÄRJESTYS ETÄISYYDEN MUKAAN
+
+                        //targets2[j, i].transform.position = new Vector2(0f + j, -80f + i);
+                        //targets2[j, i].transform.position = new Vector2(euler, spriteY + 3);
+                        //Debug.Log("euler " + euler);
+
+                        //       target.transform.position = new Vector2(euler, spriteY + 3);
+                        //      Vector3 targetP = new Vector3(target.transform.position.x, target.transform.position.y, 0);
+                        //targetP.transform.position = target.transform.position;
+                        //      targets[j, i].transform.position = targetP;
+                        landscape.transform.position = new Vector2(euler, spriteY + 3);
+                        //Debug.Log("euler " + euler);
+                        landscape2.transform.position = new Vector2(euler + landscapeLenght, spriteY + 3);
+                        miniCar.transform.position = new Vector2(0 + arraySize / 2, -50 + arraySize / 2);
+                        //miniCar.transform.rotation = new Quaternion(myCar.transform.rotation.x, myCar.transform.rotation.y, myCar.transform.rotation.z - 180f, 0);
+                        miniCar.transform.rotation = myCar.transform.rotation;
+                    } //not null
                 }
             }
         }
-
-        //PIIRRETÄÄN TUULILASILLE
-
-        carPosition = myCar.transform.position;
-        oldCarPos = carPosition;
-        gridPos = m_Grid.WorldToCell(carPosition);
-        //Debug.Log("GRIDPOS " + gridPos);
-        gridPos.z = 0;
-        //if (m_Road.GetTile(gridPos) != null) //SIJAINNIN TESTAUS
-        //{
-        //    Debug.Log("KOLARI AITAAN");
-        //}
-        euler = 360f - myCar.transform.rotation.eulerAngles.z; //AJOSUUNTA KORJATTUNA
-
-        for (int j = 0; j < arraySize; j++)
-                    {
-                        for (int i = 0; i < arraySize; i++)
-                        {
-                //Debug.Log("Ruutu " + i * j);
-                //VIITTAUS PITÄIS VAIHTAA KLOONIIN
-
-                // testi
-
-                //if (targets2[j, i] == null)
-                //{
-                //    targets2[j, i] = GameObject.Instantiate(targets[j, i]);
-                //}
-
-                //Debug.Log("TARGET2 " + targets2[j, i]);
-
-                //HAETAAN SUUNTAKULMA
-                //aAngle = 2 * Mathf.PI - trigo[j, i, 0];
-                aAngle = trigo[j, i, 0];
-                //MUUNNETAAN ASTEIKSI
-                aAngleDeg = Mathf.Rad2Deg * aAngle - 270; // - 90;
-                //Debug.Log("TARGET   " + targets2[j, i] +"  " + aAngleDeg);
-                //miniCar.transform.rotation = myCar.transform.rotation;
-                //
-                newSize2 = 2; //ALKUARVO
-                if (dist > 1f)
-                {
-                    newSize2 = 6 * newSize2 / (dist);  // / 10f; //sizeFactor //TEST
-                }
-                            if (newSize2 > 10f) newSize2 = 10f; //rajoitin
-                            if (newSize2 < 0.1f) newSize2 = 0.1f; //rajoitin
-
-              //  newSize2 = 2; //TEST
-
-                if (targets2[i, j] != null)
-                {
-                    //if (!float.IsNaN(newSize2))
-                    //{
-                    //    scaleVector = new Vector3(1f, newSize2, 1f);
-                    //    targets2[i, j].transform.localScale = scaleVector;
-                    //}
-                    renderers2[j, i].sprite = renderers[j, i].sprite; //pitää olla muuten siniset liput ei näy
-                    float x = spriteX + 64 - (euler - aAngleDeg) / 8;
-                 //   float x = spriteX -90 - (aAngleDeg - euler) / 8;
-                    float y = spriteY - 6 + dist;
-           //KOE         targets2[j, i].transform.position = new Vector3(spriteX - (euler * 2 - aAngleDeg)/12, spriteY -6 + dist, 0f);
-                    targets2[j, i].transform.position = new Vector3(x, y, 0f);
-                    //Debug.Log("euler " + euler);
-                    //targets2[j, i].transform.position = new Vector3(spriteX - aAngleDeg - euler -45, spriteY +1, 0f);
-                    //targets2[j, i].transform.position = new Vector3(-20, -30, 0f);
-                    //  targets[j, i].transform.position = new Vector3(spriteX - aAngleDeg - euler - 45, spriteY + 1, 0f);
-
-                    //Debug.Log("Target " + targets2[j, i] + " position " + targets2[j, i].transform.position + "SCALE " + targets2[j, i].transform.localScale);
-                    renderers2[j, i].color = new Color(newSize2, dist, 0.6f); //VÄRI ETÄISYYDEN MUKAAN
-                                                                              //   renderers[j, i].sortingOrder = (int)newSize2 * 10; //HUOM ei välilyöntiä (int)newSize2 // JÄRJESTYS ETÄISYYDEN MUKAAN
-
-                    //targets2[j, i].transform.position = new Vector2(0f + j, -80f + i);
-                    //targets2[j, i].transform.position = new Vector2(euler, spriteY + 3);
-                    //Debug.Log("euler " + euler);
-                   
-             //       target.transform.position = new Vector2(euler, spriteY + 3);
-              //      Vector3 targetP = new Vector3(target.transform.position.x, target.transform.position.y, 0);
-                    //targetP.transform.position = target.transform.position;
-              //      targets[j, i].transform.position = targetP;
-                    landscape.transform.position = new Vector2(euler, spriteY + 3);
-                //Debug.Log("euler " + euler);
-                landscape2.transform.position = new Vector2(euler + landscapeLenght, spriteY + 3);
-                            miniCar.transform.position = new Vector2(0 + arraySize / 2, -50 + arraySize / 2);
-                            //miniCar.transform.rotation = new Quaternion(myCar.transform.rotation.x, myCar.transform.rotation.y, myCar.transform.rotation.z - 180f, 0);
-                            miniCar.transform.rotation = myCar.transform.rotation;
-                } //not null
-            }
-         }
                 
             //TYHJENNETÄÄN TAULUKKO
             for (int j = 0; j < arraySize; j++)

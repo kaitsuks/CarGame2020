@@ -19,7 +19,7 @@ public class Push : Physics2DObject
 
 
 	private bool keyPressed = false;
-	private Vector2 pushVector;
+	public Vector2 pushVector;
 
 
 	// Read the input from the player
